@@ -25,6 +25,8 @@ class CharacterPagingSource
             result.addAll(data)
             val prevKey = if (currentLoadingPageKey == 1) null else currentLoadingPageKey - 1
 
+
+
             return LoadResult.Page(
                 data = result,
                 prevKey = prevKey,
