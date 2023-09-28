@@ -2,12 +2,15 @@ package com.example.andersenrickmorty.presenter.ui.characters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.ResultRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler.CharacterPagingSource
+import com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler.CharactersMediator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +27,8 @@ class CharactersViewModel @Inject constructor() : ViewModel() {
 //    lateinit var characterPagingSource: CharacterPagingSource
 
 
-    val charactersFlow: MutableStateFlow<CharacterRickAndMorty> = MutableStateFlow(
-        CharacterRickAndMorty(null)
+    val charactersFlow: MutableStateFlow<PagedResponse<ResultRickAndMorty>> = MutableStateFlow(
+        PagedResponse(null)
     )
 
     fun getCharacters() {
@@ -41,9 +44,12 @@ class CharactersViewModel @Inject constructor() : ViewModel() {
         pageSize = 10
     )
 
+    @OptIn(ExperimentalPagingApi::class)
     private val pager = Pager(config = pagerConfig, pagingSourceFactory = {
 //        characterPagingSource
         CharacterPagingSource(repo)
-    })
+    },
+//    remoteMediator = CharactersMediator()
+    )
     val pagingData = pager.flow.cachedIn(viewModelScope)
 }

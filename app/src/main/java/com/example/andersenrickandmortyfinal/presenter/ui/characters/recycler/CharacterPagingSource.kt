@@ -2,7 +2,7 @@ package com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import com.example.andersenrickandmortyfinal.data.model.character.ResultRickAndMorty
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class CharacterPagingSource
         val currentLoadingPageKey = params.key ?: 1
 
         return try {
-            var characters = CharacterRickAndMorty(null)
+            var characters = PagedResponse<ResultRickAndMorty>(null)
             repository.getPagesOfCharacters(currentLoadingPageKey).collect {
                 characters = it
             }
