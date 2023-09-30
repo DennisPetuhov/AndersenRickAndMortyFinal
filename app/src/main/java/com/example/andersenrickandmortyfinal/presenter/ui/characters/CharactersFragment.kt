@@ -49,6 +49,7 @@ class CharactersFragment @Inject constructor() : Fragment() {
 //            binding.recyclerview.isVisible =loadState.refresh is LoadState.NotLoading
 //
 //        }
+        viewModel.getCharacters()
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -86,7 +87,7 @@ class CharactersFragment @Inject constructor() : Fragment() {
     private fun initView() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.pagingData.collectLatest {
+                viewModel.charactersFlowToMediator.collectLatest {
                     rickAdapter.submitData(it)
                 }
 

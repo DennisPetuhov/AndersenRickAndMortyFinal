@@ -5,16 +5,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.andersenrickandmortyfinal.data.model.character.ResultRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import com.example.andersenrickandmortyfinal.data.repository.Repository
-import com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler.CharacterPagingSource
-import com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler.CharactersMediator
+import com.example.andersenrickandmortyfinal.data.paging.CharacterPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,22 +22,34 @@ class CharactersViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var repo: Repository
 
+
 //    @Inject
 //    lateinit var characterPagingSource: CharacterPagingSource
 
 
-    val charactersFlow: MutableStateFlow<PagedResponse<ResultRickAndMorty>> = MutableStateFlow(
+
+    private  var _charactersFlow: MutableStateFlow<PagingData<CharacterRickAndMorty>> = MutableStateFlow(
+        PagingData.empty()
+    )
+    val charactersFlowToMediator: StateFlow<PagingData<CharacterRickAndMorty>>
+        get() = _charactersFlow
+
+
+    val charactersFlow: MutableStateFlow<PagedResponse<CharacterRickAndMorty>> = MutableStateFlow(
         PagedResponse(null)
     )
 
     fun getCharacters() {
         viewModelScope.launch {
-            repo.getAllCharacters().flowOn(Dispatchers.IO).collect {
-                charactersFlow.emit(it)
+
+            repo.getAllCharactersForMediator().cachedIn(viewModelScope).collect{
+                _charactersFlow.emit(it)
             }
 
         }
     }
+
+
 
     private val pagerConfig = PagingConfig(
         pageSize = 10
@@ -49,7 +60,7 @@ class CharactersViewModel @Inject constructor() : ViewModel() {
 //        characterPagingSource
         CharacterPagingSource(repo)
     },
-//    remoteMediator = CharactersMediator()
+//    remoteMediator = mediator
     )
     val pagingData = pager.flow.cachedIn(viewModelScope)
 }
