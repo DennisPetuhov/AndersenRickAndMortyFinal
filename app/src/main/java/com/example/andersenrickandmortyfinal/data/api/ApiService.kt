@@ -15,7 +15,12 @@ interface ApiService {
     @GET("character")
     suspend fun getPagesOfCharacters(@Query("page") page: Int): PagedResponse<CharacterRickAndMorty>
 
-//    @GET("character")
-//    suspend fun getPagesOfCharacters1(@Query("page") page: Int): Response<CharacterRickAndMorty>
+    @GET("character")
+    suspend fun getPagesOfCharactersByQuery(
+        @Query("page")
+        page: Int,
+        @Query("name")
+        name: String
+    ): PagedResponse<CharacterRickAndMorty>
 }
 

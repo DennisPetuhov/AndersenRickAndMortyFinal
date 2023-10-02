@@ -19,5 +19,10 @@ interface DatabaseHelper {
 
     fun pagingSource(): PagingSource<Int, CharacterRickAndMorty>
 
+    fun findCharacterByName(queryString: String):PagingSource<Int, CharacterRickAndMorty>
+
+
+
+
 
 }

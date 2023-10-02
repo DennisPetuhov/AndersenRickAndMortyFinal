@@ -20,6 +20,13 @@ interface CharacterDao {
 
     @Query("DELETE FROM CHARACTER_TABLE")
    fun deleteAllCharacters()
+    @Query(
+        "SELECT * FROM CHARACTER_TABLE WHERE " +
+                "name LIKE :queryString  " +
+                "ORDER BY  name ASC"
+    )
+    fun findCharacterByName(queryString: String):PagingSource<Int, CharacterRickAndMorty>
+
 
 
 

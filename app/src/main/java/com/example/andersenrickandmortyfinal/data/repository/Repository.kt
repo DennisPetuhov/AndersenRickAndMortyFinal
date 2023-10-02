@@ -13,7 +13,9 @@ interface Repository {
 
     fun getNextPageKey(id: Int): Flow<CharacterRemoteKeys?>
 
-    fun getAllCharactersForMediator(): Flow<PagingData<CharacterRickAndMorty>>
+    fun getAllCharactersForMediator(query:String): Flow<PagingData<CharacterRickAndMorty>>
+
+
 
 
 

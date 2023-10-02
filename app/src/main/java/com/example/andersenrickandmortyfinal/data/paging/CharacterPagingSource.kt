@@ -8,7 +8,7 @@ import com.example.andersenrickandmortyfinal.data.repository.Repository
 import javax.inject.Inject
 
 class CharacterPagingSource
-@Inject constructor(val repository: Repository) :
+ (val repository: Repository) :
     PagingSource<Int, CharacterRickAndMorty>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterRickAndMorty> {

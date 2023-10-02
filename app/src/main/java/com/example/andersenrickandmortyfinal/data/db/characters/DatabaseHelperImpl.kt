@@ -46,5 +46,9 @@ class DatabaseHelperImpl @Inject constructor(private val characterDatabase: Char
         return characterDatabase.characterDao().pagingSource()
     }
 
+    override fun findCharacterByName(queryString: String): PagingSource<Int, CharacterRickAndMorty> {
+        return  characterDatabase.characterDao().findCharacterByName(queryString)
+    }
+
 
 }

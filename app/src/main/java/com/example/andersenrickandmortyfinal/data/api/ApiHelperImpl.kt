@@ -21,5 +21,12 @@ class ApiHelperImpl @Inject constructor(private val apiService: ApiService) : Ap
         }
     }
 
+    override suspend fun getPagesOfCharactersByQuery(page: Int,name: String): Flow<PagedResponse<CharacterRickAndMorty>> {
+        return  flow {
+            val response = apiService.getPagesOfCharactersByQuery(page,name)
+            emit(response)
+        }
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package com.example.andersenrickandmortyfinal.data.paging
 
 
+import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -18,7 +19,10 @@ import javax.inject.Inject
 @OptIn(ExperimentalPagingApi::class)
 class CharactersMediator @Inject constructor(
     private val apiHelper: ApiHelper,
-    private val database: DatabaseHelper
+    private val database: DatabaseHelper,
+    private val context: Context,
+    private val name: String
+
 ) : RemoteMediator<Int, CharacterRickAndMorty>() {
 
     override suspend fun load(
@@ -30,6 +34,7 @@ class CharactersMediator @Inject constructor(
             LoadType.REFRESH -> {
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
                 remoteKeys?.nextKey?.minus(1) ?: STARTING_PAGE_INDEX
+
             }
 
             LoadType.PREPEND -> {
@@ -64,10 +69,31 @@ class CharactersMediator @Inject constructor(
 
         }
         try {
+            // Загружаем данные из БД
+//            val dataFromDb = database.yourEntityDao().loadDataForPage(pageNumber, state.config.pageSize)
+//
+//            if (dataFromDb.isNotEmpty()) {
+//                // Если данные доступны в БД, возвращаем их
+//                return MediatorResult.Success(endOfPaginationReached = false)
+//            } else {
+//                // Если данные отсутствуют в БД, загружаем их из сети
+//                val networkData = networkApi.loadDataFromNetwork(pageNumber)
+//
+//                // Сохраняем данные в БД
+//                database.yourEntityDao().insertAll(networkData)
+//
+//                // Возвращаем данные из сети
+//                return MediatorResult.Success(endOfPaginationReached = networkData.isEmpty())
+
+
             var characters = PagedResponse<CharacterRickAndMorty>(null)
-            apiHelper.getPagesOfCharacters(page).collect {
+            apiHelper.getPagesOfCharactersByQuery(page, name).collect {
                 characters = it
+
+//            apiHelper.getPagesOfCharacters(page).collect {
+//                characters = it
             }
+            println(characters.info?.next.toString())
             val listOfRick = characters.results
             val endOfPaginationReached = listOfRick.isEmpty()
             println("&&&&" + listOfRick)
@@ -122,12 +148,14 @@ class CharactersMediator @Inject constructor(
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(
-        state: PagingState<Int, CharacterRickAndMorty>): CharacterRemoteKeys? {
+        state: PagingState<Int, CharacterRickAndMorty>
+    ): CharacterRemoteKeys? {
         // The paging library is trying to load data after the anchor position
         // Get the item closest to the anchor position
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { rickId ->
-                database.getNextPageKeySimple(rickId)            }
+                database.getNextPageKeySimple(rickId)
+            }
         }
     }
 

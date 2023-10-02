@@ -1,5 +1,7 @@
 package com.example.andersenrickandmortyfinal.data.repository
 
+import android.content.Context
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -15,7 +17,8 @@ import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
     private val apiHelper: ApiHelper,
-    private val dataBaseCharacter: DatabaseHelper
+    private val dataBaseCharacter: DatabaseHelper,
+    private val context: Context
 ) : Repository {
 
 //    override suspend fun getAllCharacters(): Flow<PagedResponse<CharacterRickAndMorty>> {
@@ -33,11 +36,22 @@ class RepositoryImpl @Inject constructor(
 
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getAllCharactersForMediator(): Flow<PagingData<CharacterRickAndMorty>> {
+    override fun getAllCharactersForMediator(query: String): Flow<PagingData<CharacterRickAndMorty>> {
+        Log.d("QUERY SEARCH", "New query: $query")
+        val dbQuery = "%${query.replace(' ', '%')}%"
+//        val pagingSourceFactory = dataBaseCharacter.findCharacterByName(dbQuery)
         return Pager(
-            config = PagingConfig(pageSize = 30, prefetchDistance = 3),
-            remoteMediator = CharactersMediator(apiHelper = apiHelper, database = dataBaseCharacter)
-        ) { dataBaseCharacter.pagingSource() }.flow
+            config = PagingConfig(pageSize = 30, prefetchDistance = 3, enablePlaceholders = false),
+            remoteMediator = CharactersMediator(
+                apiHelper = apiHelper,
+                database = dataBaseCharacter,
+                context = context,
+                name = query
+            )
+        ) {
+            dataBaseCharacter.findCharacterByName(dbQuery)
+//            dataBaseCharacter.pagingSource()
+        }.flow
 
     }
 
