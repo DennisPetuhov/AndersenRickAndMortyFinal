@@ -12,8 +12,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,17 +27,105 @@
             android:inputType="textNoSuggestions"
             android:selectAllOnFocus="true"
             tools:text="Android" />
+
+
+        <RadioGroup
+            android:id="@+id/idRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/noneRadio"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:text="No Filter"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/nameRadio"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:text="Name"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/speciesRadio"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:text="Species"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/typeRadio"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:text="Type"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status"
+                android:textSize="15sp" />
+
+            <Spinner
+                android:id="@+id/spinnerStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/txtGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender"
+                android:textSize="15sp" />
+
+            <Spinner
+                android:id="@+id/spinnerGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 />
+        </LinearLayout>
+
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="25dp"
-        app:layout_constraintTop_toBottomOf="@+id/input_layout"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/input_layout">
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -46,10 +134,10 @@
             android:layout_height="wrap_content"
             android:paddingVertical="12dp"
             android:scrollbars="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/swiperefresh"
+            app:layout_constraintEnd_toEndOf="@id/swiperefresh"
+            app:layout_constraintStart_toStartOf="@id/swiperefresh"
+            app:layout_constraintTop_toTopOf="@id/swiperefresh"
             tools:ignore="UnusedAttribute" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

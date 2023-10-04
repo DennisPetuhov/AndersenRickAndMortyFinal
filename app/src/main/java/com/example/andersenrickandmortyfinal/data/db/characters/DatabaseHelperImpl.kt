@@ -10,27 +10,26 @@ import javax.inject.Inject
 class DatabaseHelperImpl @Inject constructor(private val characterDatabase: CharacterDatabase) :
     DatabaseHelper {
     override suspend fun insertAllCharacters(list: List<CharacterRickAndMorty>) {
-        return characterDatabase.withTransaction {   characterDatabase.characterDao().insertAll(list)}
+        return characterDatabase.withTransaction {
+            characterDatabase.characterDao().insertAll(list)
+        }
 
     }
 
     override suspend fun insertAllCharactersKeys(list: List<CharacterRemoteKeys>) {
         return characterDatabase.characterKeyDao().insertAllCharacterKeys(list)
-
-
     }
 
-
-
-    override  suspend fun deleteAllCharacters() {
-        return characterDatabase.withTransaction {  characterDatabase.characterDao().deleteAllCharacters()}
-
-
+    override suspend fun deleteAllCharacters() {
+        return characterDatabase.withTransaction {
+            characterDatabase.characterDao().deleteAllCharacters()
+        }
     }
 
     override suspend fun deleteAllCharactersKeys() {
-        return characterDatabase.withTransaction { characterDatabase.characterKeyDao().deleteAllCharactersKey()}
-
+        return characterDatabase.withTransaction {
+            characterDatabase.characterKeyDao().deleteAllCharactersKey()
+        }
 
     }
 
@@ -47,7 +46,19 @@ class DatabaseHelperImpl @Inject constructor(private val characterDatabase: Char
     }
 
     override fun findCharacterByName(queryString: String): PagingSource<Int, CharacterRickAndMorty> {
-        return  characterDatabase.characterDao().findCharacterByName(queryString)
+        return characterDatabase.characterDao().findCharacterByName(queryString)
+    }
+
+    override fun findCharacterBySpecies(queryString: String): PagingSource<Int, CharacterRickAndMorty> {
+        return characterDatabase.characterDao().findCharacterBySpecies(queryString)
+    }
+
+    override fun findCharacterByType(queryString: String): PagingSource<Int, CharacterRickAndMorty> {
+        return characterDatabase.characterDao().findCharacterByType(queryString)
+    }
+
+    override fun findAllCharacters(queryString: String): PagingSource<Int, CharacterRickAndMorty> {
+        return characterDatabase.characterDao().findALLCharacters(queryString)
     }
 
 

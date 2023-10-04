@@ -13,38 +13,34 @@ interface CharacterDao {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-     fun insertAll(episodes: List<CharacterRickAndMorty>)
+    fun insertAll(episodes: List<CharacterRickAndMorty>)
 
     @Query("SELECT * FROM CHARACTER_TABLE")
     fun pagingSource(): PagingSource<Int, CharacterRickAndMorty>
 
     @Query("DELETE FROM CHARACTER_TABLE")
-   fun deleteAllCharacters()
+    fun deleteAllCharacters()
+
     @Query(
-        "SELECT * FROM CHARACTER_TABLE WHERE " +
-                "name LIKE :queryString  " +
-                "ORDER BY  name ASC"
+        "SELECT * FROM CHARACTER_TABLE WHERE name LIKE :queryString  "
     )
-    fun findCharacterByName(queryString: String):PagingSource<Int, CharacterRickAndMorty>
+    fun findCharacterByName(queryString: String): PagingSource<Int, CharacterRickAndMorty>
+    @Query(
+        "SELECT * FROM CHARACTER_TABLE WHERE species LIKE :queryString  "
+    )
+    fun findCharacterBySpecies(queryString: String): PagingSource<Int, CharacterRickAndMorty>
+    @Query(
+        "SELECT * FROM CHARACTER_TABLE WHERE type LIKE :queryString  "
+    )
+    fun findCharacterByType(queryString: String): PagingSource<Int, CharacterRickAndMorty>
 
-
+    @Query(
+        "SELECT * FROM CHARACTER_TABLE WHERE" +
+                " name LIKE :queryString OR species LIKE :queryString Or type LIKE :queryString  "
+    )
+    fun findALLCharacters(queryString: String): PagingSource<Int, CharacterRickAndMorty>
 
 
 }
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun insertPersonFlow(personEntity: PersonEntity)
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun insertPerson(personEntity: PersonEntity)
-//
-//    @Update
-//    fun updatePerson(personEntity: PersonEntity)
-//
-//    @Delete
-//    fun deletePerson(personEntity: PersonEntity)
-//
-//    @Query("SELECT * FROM $PERSON_TABLE ORDER BY personId DESC")
-//    fun getAllPersons() : MutableList<PersonEntity>
-//
-//    @Query("SELECT * FROM $PERSON_TABLE WHERE personId  LIKE :id")
-//    fun getPerson(id : Int) : PersonEntity
+
 

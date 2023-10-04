@@ -6,13 +6,16 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import com.example.andersenrickandmortyfinal.data.api.ApiHelper
 import com.example.andersenrickandmortyfinal.data.db.characters.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import com.example.andersenrickandmortyfinal.data.paging.CharactersMediator
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
@@ -20,13 +23,19 @@ class RepositoryImpl @Inject constructor(
     private val dataBaseCharacter: DatabaseHelper,
     private val context: Context
 ) : Repository {
+    override fun getAllCharacters(): Flow<PagedResponse<CharacterRickAndMorty>> {
+        return flow { dataBaseCharacter.pagingSource() }
+    }
 
 //    override suspend fun getAllCharacters(): Flow<PagedResponse<CharacterRickAndMorty>> {
 //        return apiHelper.getAllCharacters()
 //    }
 
-    override suspend fun getPagesOfCharacters(page: Int): Flow<PagedResponse<CharacterRickAndMorty>> {
-        return apiHelper.getPagesOfCharacters(page)
+    override suspend fun getPagesOfAllCharacters(
+        page: Int, gender: String,
+        status: String
+    ): Flow<PagedResponse<CharacterRickAndMorty>> {
+        return apiHelper.getPagesOfAllCharacters(page, gender,status)
     }
 
 
@@ -36,24 +45,74 @@ class RepositoryImpl @Inject constructor(
 
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getAllCharactersForMediator(query: String): Flow<PagingData<CharacterRickAndMorty>> {
-        Log.d("QUERY SEARCH", "New query: $query")
+    override fun getAllCharactersFromMediator(
+        type: TypeOfRequest,
+        query: String,
+        gender: String,
+        status: String
+    ): Flow<PagingData<CharacterRickAndMorty>> {
+        Log.d("QUERY SEARCH", "New query: $query + $status + ${type.toString()} + $gender")
+
         val dbQuery = "%${query.replace(' ', '%')}%"
-//        val pagingSourceFactory = dataBaseCharacter.findCharacterByName(dbQuery)
+
+
         return Pager(
-            config = PagingConfig(pageSize = 30, prefetchDistance = 3, enablePlaceholders = false),
+            config = PagingConfig(
+                pageSize = 30,
+                prefetchDistance = 3,
+                enablePlaceholders = false
+            ),
             remoteMediator = CharactersMediator(
                 apiHelper = apiHelper,
                 database = dataBaseCharacter,
                 context = context,
-                name = query
+                query = query,
+                type = type,
+                gender = gender,
+                 status = status
+
             )
-        ) {
-            dataBaseCharacter.findCharacterByName(dbQuery)
-//            dataBaseCharacter.pagingSource()
+        )
+        {
+
+            pagingData(type, dbQuery)
+
         }.flow
+
 
     }
 
 
+    private fun pagingData(
+        type: TypeOfRequest,
+        query: String
+    ): PagingSource<Int, CharacterRickAndMorty> {
+        return when (type) {
+            is TypeOfRequest.None -> {
+                dataBaseCharacter.findAllCharacters(query)
+
+            }
+
+            is TypeOfRequest.Name -> {
+                dataBaseCharacter.findCharacterByName(query)
+            }
+
+            is TypeOfRequest.Species -> {
+                dataBaseCharacter.findCharacterBySpecies(query)
+            }
+
+            is TypeOfRequest.Type -> {
+                dataBaseCharacter.findCharacterByType(query)
+            }
+        }
+    }
+
+
+
 }
+
+
+
+
+
+

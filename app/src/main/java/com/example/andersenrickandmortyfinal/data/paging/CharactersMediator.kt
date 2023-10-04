@@ -11,6 +11,7 @@ import com.example.andersenrickandmortyfinal.data.db.characters.Constants.STARTI
 import com.example.andersenrickandmortyfinal.data.db.characters.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import retrofit2.HttpException
 import java.io.IOException
@@ -21,7 +22,10 @@ class CharactersMediator @Inject constructor(
     private val apiHelper: ApiHelper,
     private val database: DatabaseHelper,
     private val context: Context,
-    private val name: String
+    private val query: String,
+    private  val type:TypeOfRequest,
+    private val gender:String,
+    private val status:String
 
 ) : RemoteMediator<Int, CharacterRickAndMorty>() {
 
@@ -29,21 +33,14 @@ class CharactersMediator @Inject constructor(
         loadType: LoadType,
         state: PagingState<Int, CharacterRickAndMorty>
     ): MediatorResult {
-
         val page = when (loadType) {
             LoadType.REFRESH -> {
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
                 remoteKeys?.nextKey?.minus(1) ?: STARTING_PAGE_INDEX
-
             }
 
             LoadType.PREPEND -> {
                 val remoteKeys = getRemoteKeyForFirstItem(state)
-                // If remoteKeys is null, that means the refresh result is not in the database yet.
-                // We can return Success with `endOfPaginationReached = false` because Paging
-                // will call this method again if RemoteKeys becomes non-null.
-                // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
-                // the end of pagination for prepend.
                 val prevKey = remoteKeys?.prevKey
                 if (prevKey == null) {
                     return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
@@ -53,11 +50,6 @@ class CharactersMediator @Inject constructor(
 
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
-                // If remoteKeys is null, that means the refresh result is not in the database yet.
-                // We can return Success with `endOfPaginationReached = false` because Paging
-                // will call this method again if RemoteKeys becomes non-null.
-                // If remoteKeys is NOT NULL but its nextKey is null, that means we've reached
-                // the end of pagination for append.
                 val nextKey = remoteKeys?.nextKey
                 if (nextKey == null) {
                     return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
@@ -69,43 +61,24 @@ class CharactersMediator @Inject constructor(
 
         }
         try {
-            // Загружаем данные из БД
-//            val dataFromDb = database.yourEntityDao().loadDataForPage(pageNumber, state.config.pageSize)
-//
-//            if (dataFromDb.isNotEmpty()) {
-//                // Если данные доступны в БД, возвращаем их
-//                return MediatorResult.Success(endOfPaginationReached = false)
-//            } else {
-//                // Если данные отсутствуют в БД, загружаем их из сети
-//                val networkData = networkApi.loadDataFromNetwork(pageNumber)
-//
-//                // Сохраняем данные в БД
-//                database.yourEntityDao().insertAll(networkData)
-//
-//                // Возвращаем данные из сети
-//                return MediatorResult.Success(endOfPaginationReached = networkData.isEmpty())
-
-
             var characters = PagedResponse<CharacterRickAndMorty>(null)
-            apiHelper.getPagesOfCharactersByQuery(page, name).collect {
-                characters = it
 
-//            apiHelper.getPagesOfCharacters(page).collect {
-//                characters = it
+            apiHelper.getCharactersByQuery(page, type, query, gender, status).collect {
+                characters = it
             }
-            println(characters.info?.next.toString())
+
+
             val listOfRick = characters.results
             val endOfPaginationReached = listOfRick.isEmpty()
-            println("&&&&" + listOfRick)
             if (loadType == LoadType.REFRESH) {
                 database.deleteAllCharacters()
                 database.deleteAllCharactersKeys()
-
-
             }
 
             val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
             val nextKey = if (endOfPaginationReached) null else page + 1
+
+            println("!!!!  prevKey $prevKey nextKey $nextKey")
 
 
             val keys = listOfRick.map {

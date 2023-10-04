@@ -5,4 +5,22 @@
     <string name="locations">Locations</string>
     <string name="episodes">Episodes</string>
     <string name="no_internet">No Internet Connection</string>
+
+    <string-array name="status_of_character">
+        <item>no status</item>
+        <item>alive</item>
+        <item>dead</item>
+        <item>unknown</item>
+
+    </string-array>
+    <string-array name="gender_of_character">
+        <item>no gender</item>
+        <item>female</item>
+        <item>male</item>
+        <item>genderless</item>
+        <item>unknown</item>
+
+
+
+    </string-array>
 </resources>

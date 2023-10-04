@@ -9,6 +9,8 @@ class CharacterViewHolder (private val binding: CharacterItemBinding): RecyclerV
         item?.let{
             binding.name.text = it.name
             binding.gender.text = it.gender
+            binding.species.text= it.species
+            binding.status.text= it.status
 
         }
 
