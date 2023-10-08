@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface ApiHelper {
-    suspend fun getAllCharacters(): Flow<PagedResponse<CharacterRickAndMorty>>
+
+
     suspend fun getPagesOfAllCharacters(page: Int,gender:String,status:String): Flow<PagedResponse<CharacterRickAndMorty>>
 
-    suspend fun getCharactersByQuery(page: Int, type:TypeOfRequest, query: String,gender:String,status:String): Flow<PagedResponse<CharacterRickAndMorty>>
+    suspend fun getCharactersByQuery(page: Int, type:TypeOfRequest, query: String,gender:String,status:String):PagedResponse<CharacterRickAndMorty>
 
 }

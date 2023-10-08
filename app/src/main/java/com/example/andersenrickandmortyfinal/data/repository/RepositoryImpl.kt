@@ -35,7 +35,7 @@ class RepositoryImpl @Inject constructor(
         page: Int, gender: String,
         status: String
     ): Flow<PagedResponse<CharacterRickAndMorty>> {
-        return apiHelper.getPagesOfAllCharacters(page, gender,status)
+        return apiHelper.getPagesOfAllCharacters(page, gender, status)
     }
 
 
@@ -52,8 +52,16 @@ class RepositoryImpl @Inject constructor(
         status: String
     ): Flow<PagingData<CharacterRickAndMorty>> {
         Log.d("QUERY SEARCH", "New query: $query + $status + ${type.toString()} + $gender")
-
+        val apiGender = "%20$gender"
+        val apiStatus = "%20$status"
         val dbQuery = "%${query.replace(' ', '%')}%"
+        val dbGender = "%${query.replace(' ', '%')}%"
+        val dbStatus = "%${query.replace(' ', '%')}%"
+//
+//        val dbGender = "%${query.replace(' ', '.')}%"
+//        val dbStatus = "%${query.replace(' ', '.')}%"
+        println(dbGender)
+        println("REPOSITORYIMPL gender=$gender status =$status")
 
 
         return Pager(
@@ -69,13 +77,13 @@ class RepositoryImpl @Inject constructor(
                 query = query,
                 type = type,
                 gender = gender,
-                 status = status
+                status = status
 
             )
         )
         {
 
-            pagingData(type, dbQuery)
+            pagingData(type, dbQuery, dbGender, dbStatus)
 
         }.flow
 
@@ -85,28 +93,29 @@ class RepositoryImpl @Inject constructor(
 
     private fun pagingData(
         type: TypeOfRequest,
-        query: String
+        query: String,
+        gender: String,
+        status: String
     ): PagingSource<Int, CharacterRickAndMorty> {
         return when (type) {
             is TypeOfRequest.None -> {
-                dataBaseCharacter.findAllCharacters(query)
+                dataBaseCharacter.findAllCharacters(query, gender, status)
 
             }
 
             is TypeOfRequest.Name -> {
-                dataBaseCharacter.findCharacterByName(query)
+                dataBaseCharacter.findCharacterByName(query, gender, status)
             }
 
             is TypeOfRequest.Species -> {
-                dataBaseCharacter.findCharacterBySpecies(query)
+                dataBaseCharacter.findCharacterBySpecies(query, gender, status)
             }
 
             is TypeOfRequest.Type -> {
-                dataBaseCharacter.findCharacterByType(query)
+                dataBaseCharacter.findCharacterByType(query, gender, status)
             }
         }
     }
-
 
 
 }

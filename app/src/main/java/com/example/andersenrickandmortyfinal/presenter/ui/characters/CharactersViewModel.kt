@@ -1,21 +1,25 @@
 package com.example.andersenrickandmortyfinal.presenter.ui.characters
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
+import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterTypeRequest
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CharactersViewModel @Inject constructor() : ViewModel() {
+class CharactersViewModel @Inject constructor() : BaseViewModel() {
+    init {
+        querySearch()
+    }
+
     @Inject
     lateinit var repo: Repository
 
@@ -51,7 +55,7 @@ class CharactersViewModel @Inject constructor() : ViewModel() {
 
     }
 
-    fun onSpinerGenderChanged(gender: String) {
+    fun onSpinnerGenderChanged(gender: String) {
         val state = queryFlow.value.copy(gender = gender)
         queryFlow.value = state
     }
@@ -62,17 +66,39 @@ class CharactersViewModel @Inject constructor() : ViewModel() {
 
     }
 
-    fun getCharacters(type: TypeOfRequest, query: String, gender: String, status: String) {
-        viewModelScope.launch {
 
-            repo.getAllCharactersFromMediator(type, query, gender, status).cachedIn(viewModelScope)
-                .collect {
-                    _charactersFlow.emit(it)
-                }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun querySearch() {
+        viewModelScope.launch {
+            queryFlow.flatMapLatest { request ->
+                repo.getAllCharactersFromMediator(
+                    request.typeOfRequest,
+                    request.query,
+                    request.gender,
+                    request.status
+                )
+
+            }.collect {
+                _charactersFlow.emit(it)
+            }
 
 
         }
     }
+
+
+//    fun getCharacters(type: TypeOfRequest, query: String, gender: String, status: String) {
+//        viewModelScope.launch {
+//            val newFlow =
+//                repo.getAllCharactersFromMediator(type, query, gender, status)
+//                    .cachedIn(viewModelScope)
+//            newFlow.collect {
+//                _charactersFlow.emit(it)
+//            }
+//
+//
+//        }
+//    }
 
 
 }

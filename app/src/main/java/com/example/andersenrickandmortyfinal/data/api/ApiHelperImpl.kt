@@ -8,16 +8,22 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class ApiHelperImpl @Inject constructor(private val apiService: ApiService) : ApiHelper {
-    override suspend fun getAllCharacters(): Flow<PagedResponse<CharacterRickAndMorty>> {
-        return flow {
-            val response = apiService.getAllCharacters()
-            emit(response)
-        }
-    }
 
-    override suspend fun getPagesOfAllCharacters(page: Int, gender: String,status: String): Flow<PagedResponse<CharacterRickAndMorty>> {
+
+//    override suspend fun getAllCharacters(): Flow<PagedResponse<CharacterRickAndMorty>> {
+//        return flow {
+//            val response = apiService.getAllCharacters()
+//            emit(response)
+//        }
+//    }
+
+    override suspend fun getPagesOfAllCharacters(
+        page: Int,
+        gender: String,
+        status: String
+    ): Flow<PagedResponse<CharacterRickAndMorty>> {
         return flow {
-            val response = apiService.getPagesOfAllCharacters(page,gender,status)
+            val response = apiService.getPagesOfAllCharacters(page, gender, status)
             emit(response)
         }
     }
@@ -28,32 +34,33 @@ class ApiHelperImpl @Inject constructor(private val apiService: ApiService) : Ap
         query: String,
         gender: String,
         status: String
-    ): Flow<PagedResponse<CharacterRickAndMorty>> {
-        return flow {
-            emit(
-                when (type) {
+    ): PagedResponse<CharacterRickAndMorty> {
+        return when (type) {
 
 
-                    is TypeOfRequest.None -> {
-                        apiService.getPagesOfAllCharacters(page, gender, status)
-                    }
+            is TypeOfRequest.None -> {
+                println("API $page , $gender, $status")
+                apiService.getPagesOfAllCharacters(page, gender, status)
+//                        apiService.getAllCharactersTest(page)
 
-                    is TypeOfRequest.Name -> {
-                        apiService.getCharactersByName(page, query, gender, status)
-                    }
+            }
 
-                    is TypeOfRequest.Species -> {
-                        apiService.getCharactersBySpicies(page, query, gender, status)
-                    }
+            is TypeOfRequest.Name -> {
+                apiService.getCharactersByName(page, query, gender, status)
+            }
 
-                    is TypeOfRequest.Type -> {
-                        apiService.getCharactersByType(page, query, gender, status)
-                    }
-                }
-            )
+            is TypeOfRequest.Species -> {
+                apiService.getCharactersBySpecies(page, query, gender, status)
+            }
+
+            is TypeOfRequest.Type -> {
+                apiService.getCharactersByType(page, query, gender, status)
+            }
         }
 
     }
+
 }
+
 
 

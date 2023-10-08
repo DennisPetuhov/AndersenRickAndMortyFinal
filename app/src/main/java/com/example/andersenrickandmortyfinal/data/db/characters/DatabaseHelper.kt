@@ -19,13 +19,29 @@ interface DatabaseHelper {
 
     fun pagingSource(): PagingSource<Int, CharacterRickAndMorty>
 
-    fun findCharacterByName(queryString: String):PagingSource<Int, CharacterRickAndMorty>
-    fun findCharacterBySpecies(queryString: String):PagingSource<Int, CharacterRickAndMorty>
-    fun findCharacterByType(queryString: String):PagingSource<Int, CharacterRickAndMorty>
-    fun findAllCharacters(queryString: String):PagingSource<Int, CharacterRickAndMorty>
+    fun findCharacterByName(
+        queryString: String,
+        gender: String,
+        status: String
+    ): PagingSource<Int, CharacterRickAndMorty>
 
+    fun findCharacterBySpecies(
+        queryString: String,
+        gender: String,
+        status: String
+    ): PagingSource<Int, CharacterRickAndMorty>
 
+    fun findCharacterByType(
+        queryString: String,
+        gender: String,
+        status: String
+    ): PagingSource<Int, CharacterRickAndMorty>
 
+    fun findAllCharacters(
+        queryString: String,
+        gender: String,
+        status: String
+    ): PagingSource<Int, CharacterRickAndMorty>
 
 
 }

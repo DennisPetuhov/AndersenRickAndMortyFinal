@@ -18,14 +18,15 @@ import java.io.IOException
 import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class CharactersMediator @Inject constructor(
+class CharactersMediator(
     private val apiHelper: ApiHelper,
     private val database: DatabaseHelper,
     private val context: Context,
     private val query: String,
-    private  val type:TypeOfRequest,
-    private val gender:String,
-    private val status:String
+    private val type: TypeOfRequest,
+
+    private val gender: String,
+    private val status: String
 
 ) : RemoteMediator<Int, CharacterRickAndMorty>() {
 
@@ -62,13 +63,14 @@ class CharactersMediator @Inject constructor(
         }
         try {
             var characters = PagedResponse<CharacterRickAndMorty>(null)
+            println(" MEDIATOR REQUEST  page=$page type=$type, query=$query, gender=$gender, status=$status")
+//            apiHelper.getCharactersByQuery(page, type, query, gender, status).collect {
+//                characters = it
+//            }
+            val response = apiHelper.getCharactersByQuery(page, type, query, gender, status)
 
-            apiHelper.getCharactersByQuery(page, type, query, gender, status).collect {
-                characters = it
-            }
-
-
-            val listOfRick = characters.results
+//            val listOfRick = characters.results
+            val listOfRick = response.results
             val endOfPaginationReached = listOfRick.isEmpty()
             if (loadType == LoadType.REFRESH) {
                 database.deleteAllCharacters()

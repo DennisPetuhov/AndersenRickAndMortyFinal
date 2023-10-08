@@ -8,13 +8,15 @@ import retrofit2.http.Query
 
 
 interface ApiService {
+
     @GET("character")
-    suspend fun getAllCharacters(): PagedResponse<CharacterRickAndMorty>
+    suspend fun getAllCharactersTest( @Query("page") page: Int): PagedResponse<CharacterRickAndMorty>
 
 
     @GET("character")
     suspend fun getPagesOfAllCharacters(
-        @Query("page") page: Int,
+        @Query("page")
+        page: Int,
         @Query("gender")
         gender: String,
         @Query("status")
@@ -34,7 +36,7 @@ interface ApiService {
     ): PagedResponse<CharacterRickAndMorty>
 
     @GET("character")
-    suspend fun getCharactersBySpicies(
+    suspend fun getCharactersBySpecies(
         @Query("page")
         page: Int,
         @Query("species")

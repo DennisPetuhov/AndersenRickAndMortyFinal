@@ -25,14 +25,20 @@ interface CharacterDao {
         "SELECT * FROM CHARACTER_TABLE WHERE name LIKE :queryString  "
     )
     fun findCharacterByName(queryString: String): PagingSource<Int, CharacterRickAndMorty>
+
     @Query(
         "SELECT * FROM CHARACTER_TABLE WHERE species LIKE :queryString  "
     )
     fun findCharacterBySpecies(queryString: String): PagingSource<Int, CharacterRickAndMorty>
+
     @Query(
-        "SELECT * FROM CHARACTER_TABLE WHERE type LIKE :queryString  "
+        "SELECT * FROM CHARACTER_TABLE WHERE type LIKE :queryString" +
+                " AND gender LIKE :gender AND status LIKE :status "
     )
-    fun findCharacterByType(queryString: String): PagingSource<Int, CharacterRickAndMorty>
+    fun findCharacterByType(
+        queryString: String, gender: String,
+        status: String
+    ): PagingSource<Int, CharacterRickAndMorty>
 
     @Query(
         "SELECT * FROM CHARACTER_TABLE WHERE" +
