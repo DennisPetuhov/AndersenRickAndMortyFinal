@@ -1,8 +1,14 @@
 package com.example.andersenrickandmortyfinal.data.di
 
-import com.example.andersenrickandmortyfinal.data.api.ApiHelper
-import com.example.andersenrickandmortyfinal.data.api.ApiHelperImpl
-import com.example.andersenrickandmortyfinal.data.api.ApiService
+import com.example.andersenrickandmortyfinal.data.api.character.CharacterApiHelper
+import com.example.andersenrickandmortyfinal.data.api.character.CharacterApiHelperImpl
+import com.example.andersenrickandmortyfinal.data.api.character.CharacterService
+import com.example.andersenrickandmortyfinal.data.api.episode.EpisodeApiHelperImpl
+import com.example.andersenrickandmortyfinal.data.api.episode.EpisodeApiHelper
+import com.example.andersenrickandmortyfinal.data.api.episode.EpisodeService
+import com.example.andersenrickandmortyfinal.data.api.location.LocationApiHelper
+import com.example.andersenrickandmortyfinal.data.api.location.LocationApiHelperImpl
+import com.example.andersenrickandmortyfinal.data.api.location.LocationService
 import com.example.andersenrickandmortyfinal.domain.Utils
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -41,12 +47,36 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): CharacterService {
+        return retrofit.create(CharacterService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiHelper(characterService: CharacterService): CharacterApiHelper {
+        return CharacterApiHelperImpl(characterService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEpisodeService(retrofit: Retrofit): EpisodeService {
+        return retrofit.create(EpisodeService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEpisodeHelper(episodeService: EpisodeService): EpisodeApiHelper {
+        return EpisodeApiHelperImpl(episodeService)
     }
     @Provides
     @Singleton
-    fun provideApiHelper(apiService: ApiService): ApiHelper {
-        return ApiHelperImpl(apiService)
+    fun provideLocationService(retrofit: Retrofit): LocationService {
+        return retrofit.create(LocationService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationHelper(locationService:LocationService): LocationApiHelper {
+        return LocationApiHelperImpl(locationService)
     }
 }

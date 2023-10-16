@@ -2,11 +2,13 @@ package com.example.andersenrickandmortyfinal.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.andersenrickandmortyfinal.data.db.characters.CharacterDatabase
+import com.example.andersenrickandmortyfinal.data.db.MainDatabase
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants.CHARACTER_DATABASE
-import com.example.andersenrickandmortyfinal.data.db.characters.DatabaseHelper
-import com.example.andersenrickandmortyfinal.data.db.characters.DatabaseHelperImpl
+import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
+import com.example.andersenrickandmortyfinal.data.db.DatabaseHelperImpl
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,9 +21,9 @@ import javax.inject.Singleton
 class DbModule {
     @Provides
     @Singleton
-    fun provideDB(@ApplicationContext context: Context): CharacterDatabase {
+    fun provideDB(@ApplicationContext context: Context): MainDatabase {
         return Room.databaseBuilder(
-            context, CharacterDatabase::class.java, CHARACTER_DATABASE
+            context, MainDatabase::class.java, CHARACTER_DATABASE
         )
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
@@ -31,11 +33,11 @@ class DbModule {
 
     @Provides
     @Singleton
-    fun provideCharacterDao(db: CharacterDatabase) = db.characterDao()
+    fun provideCharacterDao(db: MainDatabase) = db.characterDao()
 
     @Provides
     @Singleton
-    fun provideCharacterKeyDao(db: CharacterDatabase) = db.characterKeyDao()
+    fun provideCharacterKeyDao(db: MainDatabase) = db.characterKeyDao()
 
     @Provides
     fun provideCharacterEntity() = CharacterRickAndMorty()
@@ -43,7 +45,31 @@ class DbModule {
     @Provides
     @Singleton
 
-    fun provideDataBaseHelper(db: CharacterDatabase): DatabaseHelper {
+    fun provideDataBaseHelper(db: MainDatabase): DatabaseHelper {
         return DatabaseHelperImpl(db)
     }
+
+
+
+    @Provides
+    @Singleton
+    fun provideEpisodesDao(db: MainDatabase) = db.episodeDao()
+
+    @Provides
+    @Singleton
+    fun provideEpisodesKeyDao(db: MainDatabase) = db.episodeKeyDao()
+
+    @Provides
+    fun provideEpisodeEntity() = Episode()
+
+    @Provides
+    @Singleton
+    fun provideLocationDao(db: MainDatabase) = db.locationDao()
+
+    @Provides
+    @Singleton
+    fun provideLocationKeyDao(db: MainDatabase) = db.locationKeyDao()
+
+//    @Provides
+//    fun provideLocationEntity() = LocationRick()
 }

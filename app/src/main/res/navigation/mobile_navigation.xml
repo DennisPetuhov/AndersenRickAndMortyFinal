@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.example.andersenrickandmortyfinal.presenter.ui.characters.CharactersFragment"
         android:label="@string/characters"
-        tools:layout="@layout/fragment_characters" />
+        tools:layout="@layout/fragment_characters" >
+        <action
+            android:id="@+id/action_navigation_home_to_characterDetailsFragment"
+            app:destination="@id/characterDetailsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -22,4 +26,16 @@
         android:name="com.example.andersenrickandmortyfinal.presenter.ui.episodes.EpisodesFragment"
         android:label="@string/episodes"
         tools:layout="@layout/fragment_episodes" />
+    <fragment
+        android:id="@+id/characterDetailsFragment"
+        android:name="com.example.andersenrickandmortyfinal.presenter.ui.characters.details.CharacterDetailsFragment"
+        android:label="fragment_character_deteils"
+        tools:layout="@layout/fragment_character_deteils" >
+        <action
+            android:id="@+id/action_characterDetailsFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+        <argument
+            android:name="character"
+            app:argType="com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty" />
+    </fragment>
 </navigation>

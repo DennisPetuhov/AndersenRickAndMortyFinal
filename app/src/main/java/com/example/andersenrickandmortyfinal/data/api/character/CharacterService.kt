@@ -1,4 +1,4 @@
-package com.example.andersenrickandmortyfinal.data.api
+package com.example.andersenrickandmortyfinal.data.api.character
 
 
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 
-interface ApiService {
+interface CharacterService {
 
     @GET("character")
     suspend fun getAllCharactersTest( @Query("page") page: Int): PagedResponse<CharacterRickAndMorty>

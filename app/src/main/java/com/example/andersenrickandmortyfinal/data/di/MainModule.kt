@@ -1,10 +1,10 @@
 package com.example.andersenrickandmortyfinal.data.di
 
 import android.content.Context
-import com.example.andersenrickandmortyfinal.data.api.ApiHelper
-import com.example.andersenrickandmortyfinal.data.api.ApiHelperImpl
-import com.example.andersenrickandmortyfinal.data.api.ApiService
-import com.example.andersenrickandmortyfinal.data.db.characters.DatabaseHelper
+import com.example.andersenrickandmortyfinal.data.api.character.CharacterApiHelper
+import com.example.andersenrickandmortyfinal.data.api.episode.EpisodeApiHelper
+import com.example.andersenrickandmortyfinal.data.api.location.LocationApiHelper
+import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import com.example.andersenrickandmortyfinal.data.repository.RepositoryImpl
 import dagger.Module
@@ -20,11 +20,21 @@ import javax.inject.Singleton
 class MainModule {
 
 
-
-
     @Provides
     @Singleton
-    fun provideRepository(apiHelper: ApiHelper, database: DatabaseHelper, @ApplicationContext context: Context): Repository {
-        return RepositoryImpl(apiHelper, database, context )
+    fun provideRepository(
+        characterApiHelper: CharacterApiHelper,
+        database: DatabaseHelper,
+        @ApplicationContext context: Context,
+        episodeApiHelper: EpisodeApiHelper,
+        locationApiHelper: LocationApiHelper
+    ): Repository {
+        return RepositoryImpl(
+            characterApiHelper,
+            database,
+            context,
+            episodeApiHelper,
+            locationApiHelper
+        )
     }
 }

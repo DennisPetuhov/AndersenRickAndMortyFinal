@@ -12,12 +12,12 @@ interface CharacterKeysDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
      fun insertAllCharacterKeys(characterRemoteKeys : List<CharacterRemoteKeys>)
 
-    @Query("SELECT * FROM REMOTE_KEYS_TABLE WHERE characterId LIKE :id")
+    @Query("SELECT * FROM CHARACTER_REMOTE_KEYS_TABLE WHERE characterId LIKE :id")
     fun getNextPageKey(id: Int): Flow<CharacterRemoteKeys?>
-    @Query("SELECT * FROM REMOTE_KEYS_TABLE WHERE characterId LIKE :id")
+    @Query("SELECT * FROM CHARACTER_REMOTE_KEYS_TABLE WHERE characterId LIKE :id")
     fun getNextPageKeySimple(id: Int):CharacterRemoteKeys?
 
 
-    @Query("DELETE FROM REMOTE_KEYS_TABLE")
+    @Query("DELETE FROM CHARACTER_REMOTE_KEYS_TABLE")
    fun deleteAllCharactersKey()
 }

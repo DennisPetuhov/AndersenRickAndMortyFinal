@@ -1,13 +1,17 @@
 package com.example.andersenrickandmortyfinal.data.base
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +20,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewbinding.ViewBinding
 import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.domain.utils.NetworkUtils
+import com.example.andersenrickandmortyfinal.data.navigation.NavigationCommand
+import kotlinx.coroutines.launch
 
 
 abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
@@ -23,8 +29,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
     private var _binding: VB? = null
     protected val binding get() = _binding!!
 
-    @get:LayoutRes
-    abstract val layoutId: Int
+
 
     protected abstract val viewModel: VM
 
@@ -92,7 +97,41 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
 
 
 
+
+
+
     protected abstract fun setupViews()
 
     protected abstract fun observeViewModel()
+
+
+
+
+   protected fun handleNavigation(navigationCommand: NavigationCommand) {
+        when (navigationCommand) {
+            is NavigationCommand.Back -> {
+                findNavController().navigateUp()
+            }
+            is NavigationCommand.ToDirections -> {
+                findNavController().navigate(navigationCommand.directions)
+            }
+            is NavigationCommand.Null -> null
+
+        }
+
+
+    }
+
+  protected  fun observeNavigation(viewModel: BaseViewModel) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED)
+            {
+                viewModel.navigation.collect{
+                    handleNavigation(it)
+                }
+
+            }
+        }
+
+    }
 }

@@ -1,0 +1,56 @@
+package com.example.andersenrickandmortyfinal.data.api.episode
+
+import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
+
+class EpisodeApiHelperImpl @Inject constructor(val service: EpisodeService) : EpisodeApiHelper {
+
+
+    override fun getListOfEpisodesByCharacter(list: List<Int>): Flow<List<Episode>> {
+        return flow {
+            val response = service.getListOfEpisodesByCharacter(list as MutableList<Int>)
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+
+    }
+
+    override fun getAllEpisodesByNameAndCode(
+        type: TypeOfRequest,
+        page: Int,
+        query: String,
+
+        ): Flow<PagedResponse<Episode>> {
+        return flow {
+            val response = when (type) {
+                is TypeOfRequest.Name -> {
+                    service.getAllEpisodesByName(page, query)
+                }
+
+                is TypeOfRequest.Code -> {
+                    service.getAllEpisodesByCode(page, query)
+                }
+
+                is TypeOfRequest.None -> {
+                 service.getAllEpisodes(page)
+
+
+                }
+
+                else -> {
+                    service.getAllEpisodes(page)
+                }
+            }
+
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+
+
+    }
+
+}

@@ -1,41 +1,73 @@
 package com.example.andersenrickandmortyfinal.presenter.ui.episodes
 
-import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.example.andersenrickandmortyfinal.data.base.BaseFragment
 import com.example.andersenrickandmortyfinal.databinding.FragmentEpisodesBinding
+import com.example.andersenrickandmortyfinal.presenter.ui.episodes.recycler.EpisodesAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class EpisodesFragment : Fragment() {
+class EpisodesFragment @Inject constructor() :
+    BaseFragment<FragmentEpisodesBinding, EpisodesViewModel>() {
 
-    private var _binding: FragmentEpisodesBinding? = null
-    private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val episodesViewModel =
-            ViewModelProvider(this).get(EpisodesViewModel::class.java)
+    private val vM by viewModels<EpisodesViewModel>()
 
-        _binding = FragmentEpisodesBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+    override val viewModel: EpisodesViewModel
+        get() = vM
 
-        val textView: TextView = binding.textNotifications
-        episodesViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    @Inject
+    lateinit var episodesAdapter: EpisodesAdapter
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentEpisodesBinding
+        get() = FragmentEpisodesBinding::inflate
+
+
+    override fun setupViews() {
+        val swipeToRefresh = binding.swiperefresh
+        initRecycler(binding.recyclerview, episodesAdapter)
+        swipeToRefresh(swipeToRefresh) { episodesAdapter.refresh() }
+
+
+        binding.search.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//                viewModel.onQueryChanged(p0.toString())
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+
+
+        binding.idRadioGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
+            when (checkedId) {
+//                R.id.nameRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Name)
+//                R.id.typeRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Type)
+//                R.id.speciesRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Species)
+//                R.id.noneRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.None)
+            }
         }
-        return root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.episodesFlow.collectLatest {
+                    episodesAdapter.submitData(it)
+                }
+
+
+            }
+        }
     }
 }

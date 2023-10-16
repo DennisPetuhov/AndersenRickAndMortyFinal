@@ -6,18 +6,28 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
 import com.example.andersenrickandmortyfinal.databinding.CharacterItemBinding
+import com.example.andersenrickandmortyfinal.presenter.ui.characters.OnClick
 import javax.inject.Inject
 
 class CharacterAdapter @Inject constructor() :
     PagingDataAdapter<CharacterRickAndMorty, CharacterViewHolder>(
         MyUtil()
     ) {
-
+    private var onClick: OnClick? = null
+    fun bind(onClick: OnClick) {
+        this.onClick = onClick
+    }
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         val item = getItem(position)
         item?.let {
             holder.bind(it)
+
+        }
+        holder.binding.characterItem.setOnClickListener {
+
+            item?.let { item -> onClick?.onClick(item) }
+
         }
     }
 

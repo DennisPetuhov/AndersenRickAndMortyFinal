@@ -6,20 +6,19 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.example.andersenrickandmortyfinal.data.api.ApiHelper
+import com.example.andersenrickandmortyfinal.data.api.character.CharacterApiHelper
+import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants.STARTING_PAGE_INDEX
-import com.example.andersenrickandmortyfinal.data.db.characters.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import retrofit2.HttpException
 import java.io.IOException
-import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
 class CharactersMediator(
-    private val apiHelper: ApiHelper,
+    private val characterApiHelper: CharacterApiHelper,
     private val database: DatabaseHelper,
     private val context: Context,
     private val query: String,
@@ -64,13 +63,13 @@ class CharactersMediator(
         try {
             var characters = PagedResponse<CharacterRickAndMorty>(null)
             println(" MEDIATOR REQUEST  page=$page type=$type, query=$query, gender=$gender, status=$status")
-//            apiHelper.getCharactersByQuery(page, type, query, gender, status).collect {
-//                characters = it
-//            }
-            val response = apiHelper.getCharactersByQuery(page, type, query, gender, status)
+            characterApiHelper.getCharactersByQueryFlow(page, type, query, gender, status).collect {
+                characters = it
+            }
 
-//            val listOfRick = characters.results
-            val listOfRick = response.results
+
+            val listOfRick = characters.results
+
             val endOfPaginationReached = listOfRick.isEmpty()
             if (loadType == LoadType.REFRESH) {
                 database.deleteAllCharacters()

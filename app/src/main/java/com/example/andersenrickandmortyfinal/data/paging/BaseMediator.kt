@@ -6,7 +6,7 @@
 //import androidx.paging.RemoteMediator
 //import com.example.andersenrickandmortyfinal.data.api.ApiHelper
 //import com.example.andersenrickandmortyfinal.data.db.characters.Constants.STARTING_PAGE_INDEX
-//import com.example.andersenrickandmortyfinal.data.db.characters.DatabaseHelper
+//import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 //import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 //import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
 //import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest

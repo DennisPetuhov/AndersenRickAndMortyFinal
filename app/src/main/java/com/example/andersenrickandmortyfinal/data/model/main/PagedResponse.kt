@@ -2,10 +2,8 @@ package com.example.andersenrickandmortyfinal.data.model.main
 
 data class PagedResponse<T>(
     val info: Info?,
-//    val results: List<ResultRickAndMorty> = listOf()
     val results: List<T> = listOf()
 )
-
 
 
 data class Info(

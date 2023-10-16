@@ -5,7 +5,7 @@ import com.bumptech.glide.Glide
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
 import com.example.andersenrickandmortyfinal.databinding.CharacterItemBinding
 
-class CharacterViewHolder (private val binding: CharacterItemBinding): RecyclerView.ViewHolder(binding.root) {
+class CharacterViewHolder ( val binding: CharacterItemBinding): RecyclerView.ViewHolder(binding.root) {
     fun bind(item: CharacterRickAndMorty) {
         item?.let {
             binding.name.text = it.name
