@@ -6,8 +6,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
+import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import com.example.andersenrickandmortyfinal.databinding.FragmentLocationsBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.locations.recycler.LocationAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,12 +16,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LocationsFragment : BaseFragment<FragmentLocationsBinding, LocationsViewModel>() {
+class LocationsFragment @Inject constructor() :
+    BaseFragment<FragmentLocationsBinding, LocationsViewModel>() {
 
-    private val vm:LocationsViewModel  by viewModels()
+    private val vm: LocationsViewModel by viewModels()
 
     @Inject
-    lateinit var locationAdapter:LocationAdapter
+    lateinit var locationAdapter: LocationAdapter
     override val viewModel: LocationsViewModel
         get() = vm
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentLocationsBinding
@@ -40,19 +41,38 @@ class LocationsFragment : BaseFragment<FragmentLocationsBinding, LocationsViewMo
         observeAdapterChanges()
         observeNavigation(viewModel)
     }
-private fun observeAdapterChanges(){
-    viewLifecycleOwner.lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.locationFlow.collectLatest {
-                locationAdapter.submitData(it)
+
+    override fun backPressed() {
+
+    }
+
+    private fun observeAdapterChanges() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.locationFlow.collectLatest {
+                    locationAdapter.submitData(it)
+                }
+
+
             }
+        }
+        fromAdapterToDetailsFragment()
+
+    }
+
+    private fun fromAdapterToDetailsFragment() {
+        locationAdapter.bind {
+            navigateToDetailsFragment(it as LocationRick)
 
 
         }
+
     }
 
-}
-
-
+    private fun navigateToDetailsFragment(item: LocationRick) {
+        val direction =
+            LocationsFragmentDirections.actionLocatonFragmentToLocationDetailsFragment(item)
+        viewModel.navigate(direction)
+    }
 
 }

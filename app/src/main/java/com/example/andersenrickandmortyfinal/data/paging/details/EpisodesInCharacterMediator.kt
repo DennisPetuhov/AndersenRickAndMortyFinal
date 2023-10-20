@@ -4,7 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.example.andersenrickandmortyfinal.data.api.episode.EpisodeApiHelper
+import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelper
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
@@ -17,15 +17,9 @@ import java.io.IOException
 class EpisodesInCharacterMediator(
     private val api: EpisodeApiHelper,
     private val database: DatabaseHelper,
-    private val list: List<Int>,
+    private val listOfEpisodes: List<Int>,
 
-//    private val query: String,
-//private val type: TypeOfRequest,
-//
-//private val gender: String,
-//private val status: String
-
-) : RemoteMediator<Int, Episode>() {
+    ) : RemoteMediator<Int, Episode>() {
 
     override suspend fun load(
         loadType: LoadType,
@@ -40,18 +34,14 @@ class EpisodesInCharacterMediator(
             LoadType.PREPEND -> {
                 val remoteKeys = getRemoteKeyForFirstItem(state)
                 val prevKey = remoteKeys?.prevKey
-                if (prevKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                }
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 prevKey
             }
 
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
                 val nextKey = remoteKeys?.nextKey
-                if (nextKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
-                }
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 nextKey
 
             }
@@ -59,14 +49,14 @@ class EpisodesInCharacterMediator(
 
         }
         try {
-            var myList = listOf<Episode>()
+            var myListOfEpisodes = listOf<Episode>()
 //            println(" MEDIATOR REQUEST  page=$page type=$type, query=$query, gender=$gender, status=$status")
-            api.getListOfEpisodesByCharacter(list).collect {
-                myList = it
+            api.getListOfEpisodesByCharacter(listOfEpisodes).collect {
+                myListOfEpisodes = it
             }
 
 
-            val listOfEpisodes = myList
+            val listOfEpisodes = myListOfEpisodes
 
             val endOfPaginationReached = listOfEpisodes.isEmpty()
             if (loadType == LoadType.REFRESH) {
@@ -100,21 +90,16 @@ class EpisodesInCharacterMediator(
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, Episode>): CharacterRemoteKeys? {
-        // Get the last page that was retrieved, that contained items.
-        // From that last page, get the last item
-        return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
-            ?.let { rick ->
 
-                database.getNextPageKeySimple(rick.id)
+        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
+            ?.let { episode ->
+                database.getNextPageKeySimple(episode.id)
             }
     }
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, Episode>): CharacterRemoteKeys? {
-        // Get the first page that was retrieved, that contained items.
-        // From that first page, get the first item
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { episode ->
-                // Get the remote keys of the first items retrieved
                 database.getNextPageKeySimple(episode.id)
             }
     }
@@ -122,8 +107,6 @@ class EpisodesInCharacterMediator(
     private suspend fun getRemoteKeyClosestToCurrentPosition(
         state: PagingState<Int, Episode>
     ): CharacterRemoteKeys? {
-        // The paging library is trying to load data after the anchor position
-        // Get the item closest to the anchor position
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { episode ->
                 database.getNextPageKeySimple(episode)

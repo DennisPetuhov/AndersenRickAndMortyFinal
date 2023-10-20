@@ -1,4 +1,4 @@
-package com.example.andersenrickandmortyfinal.data.api.episode
+package com.example.andersenrickandmortyfinal.data.network.api.episode
 
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
@@ -37,7 +37,7 @@ class EpisodeApiHelperImpl @Inject constructor(val service: EpisodeService) : Ep
                 }
 
                 is TypeOfRequest.None -> {
-                 service.getAllEpisodes(page)
+                    service.getAllEpisodes(page)
 
 
                 }
@@ -51,6 +51,13 @@ class EpisodeApiHelperImpl @Inject constructor(val service: EpisodeService) : Ep
         }.flowOn(Dispatchers.IO)
 
 
+    }
+
+    override fun getSingleEpisodesById(id: Int): Flow<Episode> {
+        return flow {
+            val response = service.getSingleEpisodesById(id)
+            emit(response)
+        }.flowOn(Dispatchers.IO)
     }
 
 }

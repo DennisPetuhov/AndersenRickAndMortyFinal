@@ -9,7 +9,7 @@ import com.example.andersenrickandmortyfinal.data.db.episodes.EpisodesKeyDao
 import com.example.andersenrickandmortyfinal.data.db.location.LocationDao
 import com.example.andersenrickandmortyfinal.data.db.location.LocationKeysDao
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.episode.EpisodesRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRemoteKeys
@@ -18,7 +18,7 @@ import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 
 @Database(
     entities =
-    [CharacterRickAndMorty::class, CharacterRemoteKeys::class,
+    [Character::class, CharacterRemoteKeys::class,
         EpisodesRemoteKeys::class, Episode::class,
     LocationRick::class, LocationRemoteKeys::class],
     version = 4

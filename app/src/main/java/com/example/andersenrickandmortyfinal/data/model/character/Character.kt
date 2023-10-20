@@ -13,7 +13,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = CHARACTER_TABLE)
 @TypeConverters(StringListConverter::class, NameUrlConverter::class)
-data class CharacterRickAndMorty(
+data class Character(
     @PrimaryKey
     var id: Int = 0,
     var created: String = "",

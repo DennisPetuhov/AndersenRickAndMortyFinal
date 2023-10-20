@@ -3,18 +3,15 @@ package com.example.andersenrickandmortyfinal.presenter.ui.characters
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.MyRequest
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
-import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,11 +30,11 @@ class CharactersViewModel @Inject constructor() : BaseViewModel() {
         MutableStateFlow(MyRequest(TypeOfRequest.None, "", "", ""))
 
 
-    private var _charactersFlow: MutableStateFlow<PagingData<CharacterRickAndMorty>> =
+    private var _charactersFlow: MutableStateFlow<PagingData<Character>> =
         MutableStateFlow(
             PagingData.empty()
         )
-    val charactersFlow: StateFlow<PagingData<CharacterRickAndMorty>>
+    val charactersFlow: StateFlow<PagingData<Character>>
         get() = _charactersFlow
 
 

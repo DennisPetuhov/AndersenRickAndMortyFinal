@@ -6,9 +6,8 @@ import com.example.andersenrickandmortyfinal.data.db.MainDatabase
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants.CHARACTER_DATABASE
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelperImpl
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
-import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,7 +39,7 @@ class DbModule {
     fun provideCharacterKeyDao(db: MainDatabase) = db.characterKeyDao()
 
     @Provides
-    fun provideCharacterEntity() = CharacterRickAndMorty()
+    fun provideCharacterEntity() = Character()
 
     @Provides
     @Singleton

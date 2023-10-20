@@ -1,16 +1,17 @@
-package com.example.andersenrickandmortyfinal.data.api.character
+package com.example.andersenrickandmortyfinal.data.network.api.character
 
 
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
 interface CharacterService {
 
     @GET("character")
-    suspend fun getAllCharactersTest( @Query("page") page: Int): PagedResponse<CharacterRickAndMorty>
+    suspend fun getAllCharactersTest(@Query("page") page: Int): PagedResponse<Character>
 
 
     @GET("character")
@@ -21,7 +22,7 @@ interface CharacterService {
         gender: String,
         @Query("status")
         status: String
-    ): PagedResponse<CharacterRickAndMorty>
+    ): PagedResponse<Character>
 
     @GET("character")
     suspend fun getCharactersByName(
@@ -33,7 +34,7 @@ interface CharacterService {
         gender: String,
         @Query("status")
         status: String
-    ): PagedResponse<CharacterRickAndMorty>
+    ): PagedResponse<Character>
 
     @GET("character")
     suspend fun getCharactersBySpecies(
@@ -45,7 +46,7 @@ interface CharacterService {
         gender: String,
         @Query("status")
         status: String
-    ): PagedResponse<CharacterRickAndMorty>
+    ): PagedResponse<Character>
 
     @GET("character")
     suspend fun getCharactersByType(
@@ -57,6 +58,11 @@ interface CharacterService {
         gender: String,
         @Query("status")
         status: String
-    ): PagedResponse<CharacterRickAndMorty>
+    ): PagedResponse<Character>
+
+    @GET("character/{list}")
+    suspend fun getListOfCharacters(
+        @Path ("list")
+    list:List<Int>):List<Character>
 }
 

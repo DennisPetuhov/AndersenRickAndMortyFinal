@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 
 
 @Dao
@@ -13,10 +13,10 @@ interface CharacterDao {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(episodes: List<CharacterRickAndMorty>)
+    fun insertAll(episodes: List<Character>)
 
     @Query("SELECT * FROM CHARACTER_TABLE")
-    fun pagingSource(): PagingSource<Int, CharacterRickAndMorty>
+    fun pagingSource(): PagingSource<Int, Character>
 
     @Query("DELETE FROM CHARACTER_TABLE")
     fun deleteAllCharacters()
@@ -24,12 +24,12 @@ interface CharacterDao {
     @Query(
         "SELECT * FROM CHARACTER_TABLE WHERE name LIKE :queryString  "
     )
-    fun findCharacterByName(queryString: String): PagingSource<Int, CharacterRickAndMorty>
+    fun findCharacterByName(queryString: String): PagingSource<Int, Character>
 
     @Query(
         "SELECT * FROM CHARACTER_TABLE WHERE species LIKE :queryString  "
     )
-    fun findCharacterBySpecies(queryString: String): PagingSource<Int, CharacterRickAndMorty>
+    fun findCharacterBySpecies(queryString: String): PagingSource<Int, Character>
 
     @Query(
         "SELECT * FROM CHARACTER_TABLE WHERE type LIKE :queryString" +
@@ -38,13 +38,17 @@ interface CharacterDao {
     fun findCharacterByType(
         queryString: String, gender: String,
         status: String
-    ): PagingSource<Int, CharacterRickAndMorty>
+    ): PagingSource<Int, Character>
 
     @Query(
         "SELECT * FROM CHARACTER_TABLE WHERE" +
                 " name LIKE :queryString OR species LIKE :queryString Or type LIKE :queryString  "
     )
-    fun findALLCharacters(queryString: String): PagingSource<Int, CharacterRickAndMorty>
+    fun findALLCharacters(queryString: String): PagingSource<Int, Character>
+@Query(
+    "SELECT * FROM CHARACTER_TABLE WHERE id IN (:charactersIds) "
+)
+   fun findCharactersById(charactersIds:List<Int>):PagingSource<Int,Character>
 
 
 }

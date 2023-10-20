@@ -28,6 +28,9 @@ class EpisodesAdapter @Inject constructor() :
 
             item?.let { item -> onClick?.onClick(item) }
 
+            println("WOWOWOWOWO")
+
+
         }
     }
 

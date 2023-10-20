@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.databinding.CharacterItemBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.characters.OnClick
 import javax.inject.Inject
 
 class CharacterAdapter @Inject constructor() :
-    PagingDataAdapter<CharacterRickAndMorty, CharacterViewHolder>(
+    PagingDataAdapter<Character, CharacterViewHolder>(
         MyUtil()
     ) {
     private var onClick: OnClick? = null
@@ -38,17 +38,17 @@ class CharacterAdapter @Inject constructor() :
     }
 
 
-    class MyUtil : DiffUtil.ItemCallback<CharacterRickAndMorty>() {
+    class MyUtil : DiffUtil.ItemCallback<Character>() {
         override fun areItemsTheSame(
-            oldItem: CharacterRickAndMorty,
-            newItem: CharacterRickAndMorty
+            oldItem: Character,
+            newItem: Character
         ): Boolean {
             return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
-            oldItem: CharacterRickAndMorty,
-            newItem: CharacterRickAndMorty
+            oldItem: Character,
+            newItem: Character
         ): Boolean {
             return oldItem == newItem
         }

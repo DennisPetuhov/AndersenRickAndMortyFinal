@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.databinding.CharacterDetailItemBinding
 
 class CharacterDetailsAdapter(
-    private var detailsList: MutableList<CharacterRickAndMorty>,
+    private var detailsList: MutableList<Character>,
 //    private var clickFirstFragment: ClickFirstFragment
 ) :
     RecyclerView.Adapter<CharacterDetailsAdapter.DetailsViewHolder>() {
@@ -31,7 +31,7 @@ class CharacterDetailsAdapter(
 //        }
     }
 
-    fun addData(newCatList: List<CharacterRickAndMorty>) {
+    fun addData(newCatList: List<Character>) {
 
         val diffCallBack = MovieDiffUtil(detailsList, newCatList)
         val difference = DiffUtil.calculateDiff(diffCallBack, true)
@@ -45,7 +45,7 @@ class CharacterDetailsAdapter(
 //        private var clickFirstFragment: ClickFirstFragment?
     ) :
         RecyclerView.ViewHolder(ItemBinding.root) {
-        fun bind(itemDetail: CharacterRickAndMorty) {
+        fun bind(itemDetail: Character) {
 //            ItemBinding.id.text = cat.id.toString()
 //            ItemBinding.name.text = cat.name
 //            ItemBinding.surname.text = cat.surname
@@ -61,7 +61,7 @@ class CharacterDetailsAdapter(
 
     }
 
-    class MovieDiffUtil(private val oldList: List<CharacterRickAndMorty>, private val newList: List<CharacterRickAndMorty>) :
+    class MovieDiffUtil(private val oldList: List<Character>, private val newList: List<Character>) :
         DiffUtil.Callback() {
         override fun getOldListSize(): Int {
             return oldList.size

@@ -1,4 +1,4 @@
-package com.example.andersenrickandmortyfinal.data.api.episode
+package com.example.andersenrickandmortyfinal.data.network.api.episode
 
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
@@ -17,5 +17,8 @@ interface EpisodeApiHelper {
         query: String,
 
         ): Flow<PagedResponse<Episode>>
+
+
+  fun  getSingleEpisodesById(id:Int):Flow<Episode>
 
 }

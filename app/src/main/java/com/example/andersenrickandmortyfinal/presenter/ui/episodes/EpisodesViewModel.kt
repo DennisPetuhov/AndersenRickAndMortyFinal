@@ -1,9 +1,8 @@
 package com.example.andersenrickandmortyfinal.presenter.ui.episodes
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
 import com.example.andersenrickandmortyfinal.data.model.character.MyRequest
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
@@ -12,13 +11,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EpisodesViewModel @Inject constructor() : ViewModel() {
+class EpisodesViewModel @Inject constructor() : BaseViewModel() {
     init {
         initSearch()
 
@@ -55,7 +53,6 @@ class EpisodesViewModel @Inject constructor() : ViewModel() {
 
         }
     }
-
 
 
 }

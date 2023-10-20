@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EpisodesDao {
@@ -31,8 +32,10 @@ interface EpisodesDao {
 
 
     @Query("SELECT * FROM EPISODE_TABLE WHERE id IN (:episodeIds)  ")
-   fun getCachedEpisodes(episodeIds:List<Int>): PagingSource<Int, Episode>
+    fun getCachedEpisodes(episodeIds: List<Int>): PagingSource<Int, Episode>
 
-//    @Query("SELECT * FROM EPISODE_TABLE  WHERE (:limit > 0 AND :offset >= 0) OR id IN (:episodeIds)")
-//    suspend fun getCachedEpisodesTWO (offset: Int, limit: Int, episodeIds: List<String>): List<Episode>
+    @Query("SELECT * FROM EPISODE_TABLE WHERE id LIKE :id ")
+    fun getSingleEpisodeById(id: Int): Flow<Episode>
+
+
 }

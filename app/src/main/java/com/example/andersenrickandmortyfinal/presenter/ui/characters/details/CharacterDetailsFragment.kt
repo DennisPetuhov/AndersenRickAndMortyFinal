@@ -1,9 +1,7 @@
 package com.example.andersenrickandmortyfinal.presenter.ui.characters.details
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,7 +32,7 @@ class CharacterDetailsFragment @Inject constructor() :
     override fun setupViews() {
 
 
-        viewModel.foo(requireArguments())
+        viewModel.getEpisodes(requireArguments())
 
 
 
@@ -43,18 +41,8 @@ class CharacterDetailsFragment @Inject constructor() :
     override fun observeViewModel() {
         observeNavigation(viewModel)
 
-//        viewModel.getEpisodes()
-
-        lifecycleScope.launch {
-            viewModel.episodeFlow.collect {
-                println(it)
-            }
-
-
-        }
-//        viewModel.getEpisodes()
         initRecycler()
-        viewModel.arguments(requireArguments())
+        viewModel.getArguments(requireArguments())
     }
 
 
@@ -66,7 +54,7 @@ class CharacterDetailsFragment @Inject constructor() :
 
         }
         lifecycleScope.launch {
-            viewModel._episodeFlowTry.collect {
+            viewModel.episodesFlow.collect {
                 episodeAdapter.submitData(it)
             }
         }
@@ -75,20 +63,26 @@ class CharacterDetailsFragment @Inject constructor() :
 
 
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    val direction =
-                        CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToNavigationHome()
-                    viewModel.navigate(direction)
-                }
-            }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,
-            callback
+//    override fun onAttach(context: Context) {
+//        super.onAttach(context)
+//        val callback: OnBackPressedCallback =
+//            object : OnBackPressedCallback(true) {
+//                override fun handleOnBackPressed() {
+//                    val direction =
+//                        CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToNavigationHome()
+//                    viewModel.navigate(direction)
+//                }
+//            }
+//        requireActivity().onBackPressedDispatcher.addCallback(
+//            this,
+//            callback
+//
+//        )
+//    }
 
-        )
+    override fun backPressed() {
+                val direction =
+            CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToNavigationHome()
+        viewModel.navigate(direction)
     }
 }

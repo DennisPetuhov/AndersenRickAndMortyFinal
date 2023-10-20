@@ -2,7 +2,7 @@ package com.example.andersenrickandmortyfinal.data.db
 
 import androidx.paging.PagingSource
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.episode.EpisodesRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRemoteKeys
@@ -10,7 +10,7 @@ import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import kotlinx.coroutines.flow.Flow
 
 interface DatabaseHelper {
-    suspend fun insertAllCharacters(list: List<CharacterRickAndMorty>)
+    suspend fun insertAllCharacters(list: List<Character>)
     suspend fun insertAllCharactersKeys(list: List<CharacterRemoteKeys>)
 
 
@@ -21,31 +21,31 @@ interface DatabaseHelper {
 
     suspend fun getNextPageKeySimple(id: Int): CharacterRemoteKeys?
 
-    fun pagingSource(): PagingSource<Int, CharacterRickAndMorty>
+    fun pagingSource(): PagingSource<Int, Character>
 
     fun findCharacterByName(
         queryString: String,
         gender: String,
         status: String
-    ): PagingSource<Int, CharacterRickAndMorty>
+    ): PagingSource<Int, Character>
 
     fun findCharacterBySpecies(
         queryString: String,
         gender: String,
         status: String
-    ): PagingSource<Int, CharacterRickAndMorty>
+    ): PagingSource<Int, Character>
 
     fun findCharacterByType(
         queryString: String,
         gender: String,
         status: String
-    ): PagingSource<Int, CharacterRickAndMorty>
+    ): PagingSource<Int, Character>
 
     fun findAllCharacters(
         queryString: String,
         gender: String,
         status: String
-    ): PagingSource<Int, CharacterRickAndMorty>
+    ): PagingSource<Int, Character>
 
     suspend fun insertAllEpisodes(list: List<Episode>)
     suspend fun insertAllEpisodesKeys(list: List<EpisodesRemoteKeys>)
@@ -63,6 +63,7 @@ interface DatabaseHelper {
     fun findEpisodeByCode(queryString: String): PagingSource<Int, Episode>
 
      fun getCachedEpisodes(episodeIds:List<Int>): PagingSource<Int,Episode>
+    fun getCachedCharters(charactersIds:List<Int>):PagingSource<Int,Character>
 
 
 
@@ -82,4 +83,5 @@ interface DatabaseHelper {
 
     fun findLocationByDimension(queryString: String): PagingSource<Int, LocationRick>
     fun findLocationByType(queryString: String): PagingSource<Int, LocationRick>
+    fun getEpisodeById(id: Int):Flow<Episode>
 }

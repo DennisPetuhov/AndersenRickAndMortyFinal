@@ -1,4 +1,4 @@
-package com.example.andersenrickandmortyfinal.data.api.location
+package com.example.andersenrickandmortyfinal.data.network.api.location
 
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick

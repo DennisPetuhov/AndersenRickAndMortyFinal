@@ -1,6 +1,6 @@
-package com.example.andersenrickandmortyfinal.data.api.character
+package com.example.andersenrickandmortyfinal.data.network.api.character
 
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import kotlinx.coroutines.Dispatchers
@@ -13,18 +13,11 @@ class CharacterApiHelperImpl @Inject constructor(private val characterService: C
     CharacterApiHelper {
 
 
-//    override suspend fun getAllCharacters(): Flow<PagedResponse<CharacterRickAndMorty>> {
-//        return flow {
-//            val response = apiService.getAllCharacters()
-//            emit(response)
-//        }
-//    }
-
     override suspend fun getPagesOfAllCharacters(
         page: Int,
         gender: String,
         status: String
-    ): Flow<PagedResponse<CharacterRickAndMorty>> {
+    ): Flow<PagedResponse<Character>> {
         return flow {
             val response =
                 characterService.getPagesOfAllCharacters(page, gender, status)
@@ -39,7 +32,7 @@ class CharacterApiHelperImpl @Inject constructor(private val characterService: C
         query: String,
         gender: String,
         status: String
-    ): Flow<PagedResponse<CharacterRickAndMorty>> {
+    ): Flow<PagedResponse<Character>> {
         return flow {
             val response = when (type) {
 
@@ -78,9 +71,13 @@ class CharacterApiHelperImpl @Inject constructor(private val characterService: C
         }.flowOn(Dispatchers.IO)
     }
 
+    override suspend fun getListOfCharacters(list: List<Int>): Flow<List<Character>> {
+        return flow {
+            val response = characterService.getListOfCharacters(list)
 
-
-
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
 
 
 }

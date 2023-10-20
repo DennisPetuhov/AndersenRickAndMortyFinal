@@ -3,7 +3,7 @@ package com.example.andersenrickandmortyfinal.data.db
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.episode.EpisodesRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRemoteKeys
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
     DatabaseHelper {
-    override suspend fun insertAllCharacters(list: List<CharacterRickAndMorty>) {
+    override suspend fun insertAllCharacters(list: List<Character>) {
         return db.withTransaction {
             db.characterDao().insertAll(list)
         }
@@ -45,35 +45,35 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
         return db.characterKeyDao().getNextPageKeySimple(id)
     }
 
-    override fun pagingSource(): PagingSource<Int, CharacterRickAndMorty> {
+    override fun pagingSource(): PagingSource<Int, Character> {
         return db.characterDao().pagingSource()
     }
 
     override fun findCharacterByName(
         queryString: String, gender: String,
         status: String
-    ): PagingSource<Int, CharacterRickAndMorty> {
+    ): PagingSource<Int, Character> {
         return db.characterDao().findCharacterByName(queryString)
     }
 
     override fun findCharacterBySpecies(
         queryString: String, gender: String,
         status: String
-    ): PagingSource<Int, CharacterRickAndMorty> {
+    ): PagingSource<Int, Character> {
         return db.characterDao().findCharacterBySpecies(queryString)
     }
 
     override fun findCharacterByType(
         queryString: String, gender: String,
         status: String
-    ): PagingSource<Int, CharacterRickAndMorty> {
+    ): PagingSource<Int, Character> {
         return db.characterDao().findCharacterByType(queryString, gender, status)
     }
 
     override fun findAllCharacters(
         queryString: String, gender: String,
         status: String
-    ): PagingSource<Int, CharacterRickAndMorty> {
+    ): PagingSource<Int, Character> {
         return db.characterDao().findALLCharacters(queryString)
     }
 
@@ -113,6 +113,10 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
       return  db.episodeDao().getCachedEpisodes(episodeIds)
     }
 
+    override fun getCachedCharters(charactersIds: List<Int>): PagingSource<Int, Character> {
+        return  db.characterDao().findCharactersById(charactersIds)
+    }
+
 
     override suspend fun insertAllLocations(list: List<LocationRick>) {
         db.locationDao().insertAll(list)
@@ -144,6 +148,10 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
 
     override fun findLocationByType(queryString: String): PagingSource<Int, LocationRick> {
        return db.locationDao().findLocationByType(queryString)
+    }
+
+    override fun getEpisodeById(id: Int): Flow<Episode> {
+     return   db.episodeDao().getSingleEpisodeById(id)
     }
 
 //    override suspend fun getCachedEpisodes(offset: Int, limit: Int, episodes:List<Int>): PagingSource<Int,Episode> {

@@ -1,4 +1,4 @@
-package com.example.andersenrickandmortyfinal.data.api.episode
+package com.example.andersenrickandmortyfinal.data.network.api.episode
 
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
@@ -35,4 +35,10 @@ interface EpisodeService {
         @Query("code")
         code: String,
     ): PagedResponse<Episode>
+
+    @GET("episode/{id}")
+    suspend fun getSingleEpisodesById(
+        @Path("id")
+        page: Int
+    ): Episode
 }

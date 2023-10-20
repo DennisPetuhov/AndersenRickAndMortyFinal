@@ -1,14 +1,16 @@
 package com.example.andersenrickandmortyfinal.data.di
 
-import com.example.andersenrickandmortyfinal.data.api.character.CharacterApiHelper
-import com.example.andersenrickandmortyfinal.data.api.character.CharacterApiHelperImpl
-import com.example.andersenrickandmortyfinal.data.api.character.CharacterService
-import com.example.andersenrickandmortyfinal.data.api.episode.EpisodeApiHelperImpl
-import com.example.andersenrickandmortyfinal.data.api.episode.EpisodeApiHelper
-import com.example.andersenrickandmortyfinal.data.api.episode.EpisodeService
-import com.example.andersenrickandmortyfinal.data.api.location.LocationApiHelper
-import com.example.andersenrickandmortyfinal.data.api.location.LocationApiHelperImpl
-import com.example.andersenrickandmortyfinal.data.api.location.LocationService
+import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
+import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelperImpl
+import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterService
+import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelper
+import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelperImpl
+import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeService
+import com.example.andersenrickandmortyfinal.data.network.api.location.LocationApiHelper
+import com.example.andersenrickandmortyfinal.data.network.api.location.LocationApiHelperImpl
+import com.example.andersenrickandmortyfinal.data.network.api.location.LocationService
+import com.example.andersenrickandmortyfinal.data.network.connectionmanager.ConnectionManager
+import com.example.andersenrickandmortyfinal.data.network.connectionmanager.ConnectionManagerImpl
 import com.example.andersenrickandmortyfinal.domain.Utils
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -16,6 +18,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -68,6 +73,7 @@ class ApiModule {
     fun provideEpisodeHelper(episodeService: EpisodeService): EpisodeApiHelper {
         return EpisodeApiHelperImpl(episodeService)
     }
+
     @Provides
     @Singleton
     fun provideLocationService(retrofit: Retrofit): LocationService {
@@ -76,7 +82,19 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideLocationHelper(locationService:LocationService): LocationApiHelper {
+    fun provideLocationHelper(locationService: LocationService): LocationApiHelper {
         return LocationApiHelperImpl(locationService)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideCoroutineScope() =
+        CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+
+    @Provides
+    fun bindNetworkConnectionManager(networkConnectionManagerImpl: ConnectionManagerImpl): ConnectionManager {
+        return networkConnectionManagerImpl
     }
 }

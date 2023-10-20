@@ -1,11 +1,14 @@
 package com.example.andersenrickandmortyfinal.data.model.location
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants.LOCATION_TABLE
 import com.example.andersenrickandmortyfinal.data.db.converter.StringListConverter
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = LOCATION_TABLE)
 @TypeConverters(StringListConverter::class)
 data class LocationRick(
@@ -17,4 +20,4 @@ data class LocationRick(
     var residents: List<String> = listOf(),
     var type: String = "",
     var url: String = ""
-)
+):Parcelable

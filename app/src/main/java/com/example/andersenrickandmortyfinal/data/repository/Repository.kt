@@ -2,7 +2,7 @@ package com.example.andersenrickandmortyfinal.data.repository
 
 import androidx.paging.PagingData
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
@@ -14,7 +14,7 @@ interface Repository {
     suspend fun getPagesOfAllCharacters(
         page: Int, gender: String,
         status: String
-    ): Flow<PagedResponse<CharacterRickAndMorty>>
+    ): Flow<PagedResponse<Character>>
 
 
     fun getNextPageKey(id: Int): Flow<CharacterRemoteKeys?>
@@ -24,7 +24,7 @@ interface Repository {
         query: String,
         gender: String,
         status: String
-    ): Flow<PagingData<CharacterRickAndMorty>>
+    ): Flow<PagingData<Character>>
 
     fun getEpisodesFromMediator(
         type: TypeOfRequest,
@@ -39,5 +39,8 @@ interface Repository {
         ): Flow<PagingData<LocationRick>>
 
 
-    fun getCachedEpisodes(query: String,episodeIds:List<Int>): Flow<PagingData<Episode>>
+    fun getCachedEpisodes(episodeIds:List<Int>): Flow<PagingData<Episode>>
+    fun getCachedCharacters(characterIds:List<Int>): Flow<PagingData<Character>>
+    fun getEpisodeByIdFromDb(id: Int):Flow<Episode>
+    fun getSingleEpisodesByIdFromApi(id: Int): Flow<Episode>
 }

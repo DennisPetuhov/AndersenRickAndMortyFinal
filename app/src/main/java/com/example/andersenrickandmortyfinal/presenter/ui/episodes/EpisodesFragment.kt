@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
+import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.databinding.FragmentEpisodesBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.episodes.recycler.EpisodesAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,6 +58,8 @@ class EpisodesFragment @Inject constructor() :
 //                R.id.noneRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.None)
             }
         }
+
+        fromAdapterToDetailsFragment()
     }
 
     override fun observeViewModel() {
@@ -69,5 +72,30 @@ class EpisodesFragment @Inject constructor() :
 
             }
         }
+
+        observeNavigation(viewModel)
+    }
+
+    override fun backPressed() {
+
+    }
+
+
+    private fun fromAdapterToDetailsFragment() {
+        episodesAdapter.bind {
+            println(it)
+            navigateToDetailsFragment(it as Episode)
+
+
+        }
+
+    }
+
+    private fun navigateToDetailsFragment(item: Episode) {
+        val direction =
+            EpisodesFragmentDirections.actionEpisodeFragmentToEpisodeDetailsFragment(item)
+
+
+        viewModel.navigate(direction)
     }
 }

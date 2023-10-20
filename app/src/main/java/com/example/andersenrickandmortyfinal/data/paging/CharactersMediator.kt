@@ -6,11 +6,11 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.example.andersenrickandmortyfinal.data.api.character.CharacterApiHelper
+import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants.STARTING_PAGE_INDEX
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import retrofit2.HttpException
@@ -27,11 +27,11 @@ class CharactersMediator(
     private val gender: String,
     private val status: String
 
-) : RemoteMediator<Int, CharacterRickAndMorty>() {
+) : RemoteMediator<Int, Character>() {
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, CharacterRickAndMorty>
+        state: PagingState<Int, Character>
     ): MediatorResult {
         val page = when (loadType) {
             LoadType.REFRESH -> {
@@ -61,7 +61,7 @@ class CharactersMediator(
 
         }
         try {
-            var characters = PagedResponse<CharacterRickAndMorty>(null)
+            var characters = PagedResponse<Character>(null)
             println(" MEDIATOR REQUEST  page=$page type=$type, query=$query, gender=$gender, status=$status")
             characterApiHelper.getCharactersByQueryFlow(page, type, query, gender, status).collect {
                 characters = it
@@ -101,7 +101,7 @@ class CharactersMediator(
         }
     }
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, CharacterRickAndMorty>): CharacterRemoteKeys? {
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, Character>): CharacterRemoteKeys? {
         // Get the last page that was retrieved, that contained items.
         // From that last page, get the last item
         return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
@@ -111,7 +111,7 @@ class CharactersMediator(
             }
     }
 
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, CharacterRickAndMorty>): CharacterRemoteKeys? {
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, Character>): CharacterRemoteKeys? {
         // Get the first page that was retrieved, that contained items.
         // From that first page, get the first item
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
@@ -122,7 +122,7 @@ class CharactersMediator(
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(
-        state: PagingState<Int, CharacterRickAndMorty>
+        state: PagingState<Int, Character>
     ): CharacterRemoteKeys? {
         // The paging library is trying to load data after the anchor position
         // Get the item closest to the anchor position

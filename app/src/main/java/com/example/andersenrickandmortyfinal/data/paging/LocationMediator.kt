@@ -4,7 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.example.andersenrickandmortyfinal.data.api.location.LocationApiHelper
+import com.example.andersenrickandmortyfinal.data.network.api.location.LocationApiHelper
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys

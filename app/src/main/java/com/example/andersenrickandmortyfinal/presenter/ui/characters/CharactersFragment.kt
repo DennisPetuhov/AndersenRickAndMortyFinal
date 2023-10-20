@@ -16,7 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
 import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.databinding.FragmentCharactersBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler.CharacterAdapter
@@ -33,7 +33,7 @@ class CharactersFragment @Inject constructor() :
     private val vM by viewModels<CharactersViewModel>()
 
     @Inject
-    lateinit var rickAdapter: CharacterAdapter
+    lateinit var characterAdapter: CharacterAdapter
 
 
     override val viewModel: CharactersViewModel
@@ -43,25 +43,33 @@ class CharactersFragment @Inject constructor() :
 
 
     override fun observeViewModel() {
+
+        collectCharacter()
+        observeNavigation(viewModel)
+
+
+    }
+
+    fun collectCharacter() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.charactersFlow.collectLatest {
-                    rickAdapter.submitData(it)
+                    characterAdapter.submitData(it)
                 }
 
 
             }
         }
+    }
 
-        observeNavigation(viewModel)
-
+    override fun backPressed() {
 
     }
 
 
     override fun setupViews() {
         val swipeToRefresh = binding.swiperefresh
-        initRecycler(binding.recyclerview, rickAdapter)
+        initRecycler(binding.recyclerview, characterAdapter)
         genderSpinner()
         statusSpinner()
 
@@ -92,14 +100,14 @@ class CharactersFragment @Inject constructor() :
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                rickAdapter.loadStateFlow.collectLatest { loadState ->
+                characterAdapter.loadStateFlow.collectLatest { loadState ->
                     swipeToRefresh.isRefreshing = loadState.refresh is LoadState.Loading
 
                     //
                     val isListEmpty =
-                        loadState.refresh is LoadState.NotLoading && rickAdapter.itemCount == 0
+                        loadState.refresh is LoadState.NotLoading && characterAdapter.itemCount == 0
                     // show empty list
-                    binding.emptyList.isVisible = rickAdapter.itemCount == 0
+                    binding.emptyList.isVisible = characterAdapter.itemCount == 0
                     // Only show the list if refresh succeeds.
                     binding.recyclerview.isVisible = !isListEmpty
                     // Show loading spinner during initial load or refresh.
@@ -127,38 +135,26 @@ class CharactersFragment @Inject constructor() :
 //        rickAdapter.refresh()
         fromAdapterToDetailsFragment()
 
-        swipeToRefresh(swipeToRefresh) { rickAdapter.refresh() }
+        swipeToRefresh(swipeToRefresh) { characterAdapter.refresh() }
     }
 
 
-//    private fun initRecycler() {
-//        binding.recyclerview.apply {
-//            layoutManager = GridLayoutManager(requireContext(),2)
-//
-//            adapter = rickAdapter
-////                .withLoadStateFooter(footer = FooterLoadStateAdapter{
-////                rickAdapter.retry()
-////            } )
-//        }
-//    }
-
     private fun fromAdapterToDetailsFragment() {
-        rickAdapter.bind {
-         navigateToDetailsFragment(it as CharacterRickAndMorty)
+        characterAdapter.bind {
+            navigateToDetailsFragment(it as Character)
 
 
         }
 
     }
 
-
-
-    private fun navigateToDetailsFragment(item:CharacterRickAndMorty) {
+    private fun navigateToDetailsFragment(item: Character) {
 
         val direction =
             CharactersFragmentDirections.actionNavigationHomeToCharacterDetailsFragment(item)
         viewModel.navigate(direction)
     }
+
 
     private fun genderSpinner() {
         val genderList = resources.getStringArray(R.array.gender_of_character)

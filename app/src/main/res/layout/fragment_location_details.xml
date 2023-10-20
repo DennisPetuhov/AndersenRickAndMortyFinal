@@ -6,39 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".presenter.ui.locations.details.LocationDetailsFragment">
 
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/type"
+        app:layout_constraintEnd_toStartOf="@+id/air_date"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/type"
+        android:id="@+id/air_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/name"
-        app:layout_constraintEnd_toStartOf="@+id/dimension"
+        app:layout_constraintEnd_toStartOf="@+id/episode"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/name"
         app:layout_constraintTop_toTopOf="@+id/name" />
 
     <TextView
-        android:id="@+id/dimension"
+        android:id="@+id/episode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/type"
+        app:layout_constraintBottom_toBottomOf="@+id/air_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/type"
-        app:layout_constraintTop_toTopOf="@+id/type" />
+        app:layout_constraintStart_toEndOf="@+id/air_date"
+        app:layout_constraintTop_toTopOf="@+id/air_date" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_charaters"
@@ -49,6 +51,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/type" />
-
+        app:layout_constraintTop_toBottomOf="@+id/air_date" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

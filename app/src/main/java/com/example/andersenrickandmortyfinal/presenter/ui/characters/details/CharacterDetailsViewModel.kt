@@ -3,9 +3,9 @@ package com.example.andersenrickandmortyfinal.presenter.ui.characters.details
 import android.os.Bundle
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.andersenrickandmortyfinal.data.api.episode.EpisodeApiHelper
+import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelper
 import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRickAndMorty
+import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,22 +23,23 @@ class CharacterDetailsViewModel @Inject constructor() : BaseViewModel() {
     @Inject
     lateinit var repo: Repository
 
-
-
-    private var _episodeFlow: MutableStateFlow<List<Episode>> =
-        MutableStateFlow(mutableListOf(Episode()))
-    val episodeFlow: StateFlow<List<Episode>>
-        get() = _episodeFlow
     private var _listStringFlow: MutableStateFlow<MutableList<String>> =
         MutableStateFlow(mutableListOf())
 
 
+    private var _episodesFlow: MutableStateFlow<PagingData<Episode>> =
+        MutableStateFlow(PagingData.empty())
+    val episodesFlow: StateFlow<PagingData<Episode>> get() = _episodesFlow
+
+
+    fun getArguments(bundle: Bundle): Character {
+        val arguments = CharacterDetailsFragmentArgs.fromBundle(bundle)
+        return arguments.character
+    }
+
     private fun getNumbersOfEpisodes(bundle: Bundle): MutableList<Int> {
-        val item = arguments(bundle)
-
+        val item = getArguments(bundle)
         val episodes = item.episode
-//        val episodes = _singleCharacterFlow.value.episode
-
         val newList = mutableListOf<Int>()
         for (i in episodes) {
             val episodeNumber = i.filter { symbol ->
@@ -51,19 +52,12 @@ class CharacterDetailsViewModel @Inject constructor() : BaseViewModel() {
         return newList
     }
 
-    fun arguments(bundle: Bundle): CharacterRickAndMorty {
-        val arguments = CharacterDetailsFragmentArgs.fromBundle(bundle)
-        return arguments.character
-    }
 
-    var _episodeFlowTry: MutableStateFlow<PagingData<Episode>> =
-        MutableStateFlow(PagingData.empty())
-
-    fun foo(bundel:Bundle) {
+    fun getEpisodes(bundle: Bundle) {
         viewModelScope.launch {
-            repo.getCachedEpisodes("", getNumbersOfEpisodes(bundel)).cachedIn(viewModelScope)
+            repo.getCachedEpisodes(getNumbersOfEpisodes(bundle)).cachedIn(viewModelScope)
                 .collect {
-                    _episodeFlowTry.emit(it)
+                    _episodesFlow.emit(it)
                 }
         }
     }
