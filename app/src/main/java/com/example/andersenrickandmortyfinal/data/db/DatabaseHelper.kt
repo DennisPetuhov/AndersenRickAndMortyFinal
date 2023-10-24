@@ -1,8 +1,8 @@
 package com.example.andersenrickandmortyfinal.data.db
 
 import androidx.paging.PagingSource
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.character.Character
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.episode.EpisodesRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRemoteKeys
@@ -47,41 +47,30 @@ interface DatabaseHelper {
         status: String
     ): PagingSource<Int, Character>
 
+    fun getCachedCharters(charactersIds: List<Int>): PagingSource<Int, Character>
+
+    //Episodes
     suspend fun insertAllEpisodes(list: List<Episode>)
     suspend fun insertAllEpisodesKeys(list: List<EpisodesRemoteKeys>)
-
-
     suspend fun deleteAllEpisodes()
     suspend fun deleteAllEpisodesKeys()
-
-    fun getAllEpisodes(): PagingSource<Int, Episode>
-
-
+    fun getAllEpisodes(queryString: String): PagingSource<Int, Episode>
     fun findEpisodeByName(queryString: String): PagingSource<Int, Episode>
 
-
-    fun findEpisodeByCode(queryString: String): PagingSource<Int, Episode>
-
-     fun getCachedEpisodes(episodeIds:List<Int>): PagingSource<Int,Episode>
-    fun getCachedCharters(charactersIds:List<Int>):PagingSource<Int,Character>
+    fun findEpisodeByEpisode(queryString: String): PagingSource<Int, Episode>
+    fun getCachedEpisodes(episodeIds: List<Int>): PagingSource<Int, Episode>
 
 
 
+    //Locations
     suspend fun insertAllLocations(list: List<LocationRick>)
     suspend fun insertAllLocationsKeys(list: List<LocationRemoteKeys>)
-
-
     suspend fun deleteAllLocations()
     suspend fun deleteAllLocationsKeys()
-
-
     fun getAllLocations(): PagingSource<Int, LocationRick>
-
-
     fun findLocationByName(queryString: String): PagingSource<Int, LocationRick>
-
-
     fun findLocationByDimension(queryString: String): PagingSource<Int, LocationRick>
-    fun findLocationByType(queryString: String): PagingSource<Int, LocationRick>
-    fun getEpisodeById(id: Int):Flow<Episode>
+    fun findLocationByCode(queryString: String): PagingSource<Int, LocationRick>
+
+    fun getEpisodeById(id: Int): Flow<Episode>
 }

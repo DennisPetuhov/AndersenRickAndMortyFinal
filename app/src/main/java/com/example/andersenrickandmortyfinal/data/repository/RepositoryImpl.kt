@@ -207,7 +207,7 @@ class RepositoryImpl @Inject constructor(
             }
 
             is TypeOfRequest.Type -> {
-                db.findLocationByType(query)
+                db.findLocationByCode(query)
             }
 
             else -> {
@@ -222,7 +222,8 @@ class RepositoryImpl @Inject constructor(
     ): PagingSource<Int, Episode> {
         return when (type) {
             is TypeOfRequest.None -> {
-                db.getAllEpisodes()
+
+                db.getAllEpisodes(query)
 
             }
 
@@ -230,12 +231,12 @@ class RepositoryImpl @Inject constructor(
                 db.findEpisodeByName(query)
             }
 
-            is TypeOfRequest.Code -> {
-                db.findEpisodeByName(query)
+            is TypeOfRequest.Episode -> {
+                db.findEpisodeByEpisode(query)
             }
 
             else -> {
-                db.getAllEpisodes()
+                db.getAllEpisodes(query)
             }
         }
     }

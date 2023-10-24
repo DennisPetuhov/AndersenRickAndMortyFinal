@@ -26,7 +26,7 @@ class EpisodesViewModel @Inject constructor() : BaseViewModel() {
     lateinit var repo: Repository
 
 
-    val queryFlow =
+    val episodeQueryFlow =
         MutableStateFlow(MyRequest(TypeOfRequest.None, "", "", ""))
 
     private var _episodeFlow: MutableStateFlow<PagingData<Episode>> =
@@ -40,7 +40,7 @@ class EpisodesViewModel @Inject constructor() : BaseViewModel() {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun initSearch() {
         viewModelScope.launch {
-            queryFlow.flatMapLatest { request ->
+            episodeQueryFlow.flatMapLatest { request ->
                 repo.getEpisodesFromMediator(
                     request.typeOfRequest,
                     request.query,
@@ -52,6 +52,18 @@ class EpisodesViewModel @Inject constructor() : BaseViewModel() {
 
 
         }
+    }
+
+    fun onQueryChanged(query: String) {
+        viewModelScope.launch {
+            val request = episodeQueryFlow.value.copy(query = query)
+            episodeQueryFlow.emit(request)
+        }
+    }
+    fun onRadioButtonChanged(type: TypeOfRequest) {
+        val state = episodeQueryFlow.value.copy(typeOfRequest = type)
+        episodeQueryFlow.value = state
+
     }
 
 

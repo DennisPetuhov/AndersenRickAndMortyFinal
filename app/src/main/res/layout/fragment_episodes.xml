@@ -38,7 +38,7 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/noneRadio"
+                android:id="@+id/noneEpisodeRadio"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -49,7 +49,7 @@
                 android:textSize="15sp" />
 
             <RadioButton
-                android:id="@+id/nameRadio"
+                android:id="@+id/nameEpisodeRadio"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -60,12 +60,12 @@
                 android:textSize="15sp" />
 
             <RadioButton
-                android:id="@+id/codeRadio"
+                android:id="@+id/episodeEpisodeRadio"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="4dp"
-                android:text="Code"
+                android:text="Episode"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="15sp" />

@@ -48,7 +48,6 @@ class CharactersMediatorInEpisodesAndLocationsDetails(
         }
         try {
             var myList = listOf<Character>()
-//            println(" MEDIATOR REQUEST  page=$page type=$type, query=$query, gender=$gender, status=$status")
             api.getListOfCharacters(list).collect {
                 myList = it
             }

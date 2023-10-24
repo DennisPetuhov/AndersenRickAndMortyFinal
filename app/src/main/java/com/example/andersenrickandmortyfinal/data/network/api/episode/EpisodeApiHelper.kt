@@ -11,7 +11,7 @@ interface EpisodeApiHelper {
     ): Flow<List<Episode>>
 
 
-    fun getAllEpisodesByNameAndCode(
+    fun getAllEpisodesByNameAndEpisode(
         type: TypeOfRequest,
         page: Int,
         query: String,

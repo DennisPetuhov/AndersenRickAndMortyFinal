@@ -53,8 +53,6 @@ class CharactersViewModel @Inject constructor() : BaseViewModel() {
                 status = status
             )
             queryFlow.emit(newRequest)
-//            val state = queryFlow.value.copy(query = query)
-//            queryFlow.value = state
         }
     }
 

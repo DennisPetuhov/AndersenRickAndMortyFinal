@@ -55,7 +55,7 @@ class EpisodeMediator (
         try {
             var episodes = PagedResponse<Episode>(null)
             println(" MEDIATOR EPISODE REQUEST  page=$page type=$type, query=$query")
-            apiHelper.getAllEpisodesByNameAndCode(page=page, type= type, query =  query).collect {
+            apiHelper.getAllEpisodesByNameAndEpisode(page=page, type= type, query =  query).collect {
                 episodes = it
             }
 

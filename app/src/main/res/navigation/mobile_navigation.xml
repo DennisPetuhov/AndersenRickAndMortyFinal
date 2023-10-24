@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/locaton_fragment"
-        android:name="com.example.andersenrickmorty.presenter.ui.locations.LocationsFragment"
+        android:name="com.example.andersenrickandmortyfinal.presenter.ui.locations.LocationsFragment"
         android:label="@string/locations"
         tools:layout="@layout/fragment_locations">
         <action
@@ -58,6 +58,9 @@
         <argument
             android:name="episode"
             app:argType="com.example.andersenrickandmortyfinal.data.model.episode.Episode" />
+        <action
+            android:id="@+id/action_episodeDetailsFragment_to_characterDetailsFragment"
+            app:destination="@id/characterDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/locationDetailsFragment"

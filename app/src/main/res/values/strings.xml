@@ -5,6 +5,7 @@
     <string name="locations">Locations</string>
     <string name="episodes">Episodes</string>
     <string name="no_internet">No Internet Connection</string>
+    <string name="yes_internet">There Is Internet Connection</string>
 
     <string-array name="status_of_character">
         <item>no status</item>

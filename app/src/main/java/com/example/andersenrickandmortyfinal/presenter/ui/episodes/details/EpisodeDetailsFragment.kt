@@ -7,8 +7,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
+import com.example.andersenrickandmortyfinal.data.model.character.Character
+import com.example.andersenrickandmortyfinal.data.network.connectionmanager.ConnectionManager
 import com.example.andersenrickandmortyfinal.databinding.FragmentEpisodeDetailsBinding
-import com.example.andersenrickandmortyfinal.domain.utils.NetworkUtils
 import com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler.CharacterAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -26,6 +27,9 @@ class EpisodeDetailsFragment :
 
     @Inject
     lateinit var characterAdapter: CharacterAdapter
+
+    @Inject
+    lateinit var networkConnectionManager: ConnectionManager
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentEpisodeDetailsBinding
         get() = FragmentEpisodeDetailsBinding::inflate
 
@@ -33,28 +37,27 @@ class EpisodeDetailsFragment :
         viewModel.getCharacters(requireArguments())
         val swipeToRefresh = binding.swiperefresh
         initRecycler(binding.recyclerview, characterAdapter)
-
-        swipeToRefresh(swipeToRefresh) { characterAdapter.refresh()}
-
-        chooseSOT()
+        networkConnectionManager.startListenNetworkState()
+        swipeToRefreshInDetailsFragment(swipeToRefresh, { characterAdapter.refresh() },
+            { viewModel.getSingleEpisodeByIdFromInternet(requireArguments()) },
+            { viewModel.getSingleEpisodeFromDb(requireArguments()) }
+        )
+        getDetailsInDetailsFragment(
+            { viewModel.getSingleEpisodeByIdFromInternet(requireArguments()) },
+            { viewModel.getSingleEpisodeFromDb(requireArguments()) }
+        )
 
 
     }
 
 
-    fun chooseSOT() {
-        if (NetworkUtils.isNetworkAvailable(requireContext())) {
-            viewModel.getSingleEpisodeByIdFromInternet(requireArguments())
-
-        } else {
-            viewModel.getSingleEpisodeFromDb(requireArguments())
-        }
-    }
 
     override fun observeViewModel() {
         observeNavigation(viewModel)
         collectCharacters()
         collectEpisode()
+        fromAdapterToCharacterDetailsFragment()
+        listenToInternet()
 
     }
 
@@ -81,10 +84,10 @@ class EpisodeDetailsFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.episodeFlow.collect {
-
+//                    println(it.air_date + "EEEEEEEEEEEEEEEEEE")
                     with(binding) {
                         name.text = it.name
-                        airDate.text = it.air_date
+                        airDate.text = it.airDate
                         episode.text = it.episode
 
 
@@ -96,9 +99,22 @@ class EpisodeDetailsFragment :
         }
     }
 
+    private fun fromAdapterToCharacterDetailsFragment() {
+        characterAdapter.bind {
+            navigateToCharacterDetailsFragment(it as Character)
 
-    fun setTextViews() {
 
+        }
+
+    }
+
+    private fun navigateToCharacterDetailsFragment(item: Character) {
+
+        val direction =
+            EpisodeDetailsFragmentDirections.actionEpisodeDetailsFragmentToCharacterDetailsFragment(
+                item
+            )
+        viewModel.navigate(direction)
     }
 
 

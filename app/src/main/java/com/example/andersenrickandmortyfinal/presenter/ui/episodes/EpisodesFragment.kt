@@ -8,7 +8,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
+import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.databinding.FragmentEpisodesBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.episodes.recycler.EpisodesAdapter
@@ -37,27 +39,13 @@ class EpisodesFragment @Inject constructor() :
         val swipeToRefresh = binding.swiperefresh
         initRecycler(binding.recyclerview, episodesAdapter)
         swipeToRefresh(swipeToRefresh) { episodesAdapter.refresh() }
-
-
-        binding.search.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                viewModel.onQueryChanged(p0.toString())
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-
-
-        binding.idRadioGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
-            when (checkedId) {
-//                R.id.nameRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Name)
-//                R.id.typeRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Type)
-//                R.id.speciesRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Species)
-//                R.id.noneRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.None)
-            }
+        setupEditTextSearch(binding.search){
+            viewModel.onQueryChanged(it)
         }
+        setupRadioButton()
+
+
+
 
         fromAdapterToDetailsFragment()
     }
@@ -66,6 +54,7 @@ class EpisodesFragment @Inject constructor() :
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.episodesFlow.collectLatest {
+
                     episodesAdapter.submitData(it)
                 }
 
@@ -74,10 +63,23 @@ class EpisodesFragment @Inject constructor() :
         }
 
         observeNavigation(viewModel)
+        listenToInternet()
     }
 
     override fun backPressed() {
 
+    }
+
+
+    private fun setupRadioButton() {
+
+        binding.idRadioGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
+            when (checkedId) {
+                R.id.noneEpisodeRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.None)
+                R.id.episodeEpisodeRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Episode)
+                R.id.nameEpisodeRadio-> viewModel.onRadioButtonChanged(TypeOfRequest.Name)
+            }
+        }
     }
 
 
@@ -98,4 +100,9 @@ class EpisodesFragment @Inject constructor() :
 
         viewModel.navigate(direction)
     }
+
+
+
+
+
 }

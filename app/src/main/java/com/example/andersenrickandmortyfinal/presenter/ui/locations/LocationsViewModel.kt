@@ -21,8 +21,9 @@ class LocationsViewModel @Inject constructor() : BaseViewModel() {
         querySearch()
 
     }
-    val queryFlow =
-        MutableStateFlow(MyRequest(TypeOfRequest.None, "", "", ""))
+
+    val locationQueryFlow =
+        MutableStateFlow(MyRequest(TypeOfRequest.None, ""))
 
     private var _locationFlow: MutableStateFlow<PagingData<LocationRick>> =
         MutableStateFlow(
@@ -39,7 +40,7 @@ class LocationsViewModel @Inject constructor() : BaseViewModel() {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun querySearch() {
         viewModelScope.launch {
-            queryFlow.flatMapLatest { request ->
+            locationQueryFlow.flatMapLatest { request ->
                 repo.getLocationFromMediator(
                     request.typeOfRequest,
                     request.query,
@@ -51,6 +52,17 @@ class LocationsViewModel @Inject constructor() : BaseViewModel() {
 
 
         }
+    }
+    fun onQueryChanged(query: String) {
+        viewModelScope.launch {
+            val request = locationQueryFlow.value.copy(query = query)
+                locationQueryFlow.emit(request)
+        }
+    }
+    fun onRadioButtonChanged(type: TypeOfRequest) {
+        val state = locationQueryFlow.value.copy(typeOfRequest = type)
+        locationQueryFlow.value = state
+
     }
 
 

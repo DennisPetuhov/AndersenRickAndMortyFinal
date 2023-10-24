@@ -25,10 +25,6 @@ interface LocationDao {
     )
     fun findLocationByName(queryString: String): PagingSource<Int, LocationRick>
 
-    @Query(
-        "SELECT * FROM LOCATION_TABLE WHERE type  LIKE :queryString  "
-    )
-    fun findLocationByCode(queryString: String): PagingSource<Int, LocationRick>
 
     @Query(
         "SELECT * FROM LOCATION_TABLE WHERE dimension LIKE :queryString  "

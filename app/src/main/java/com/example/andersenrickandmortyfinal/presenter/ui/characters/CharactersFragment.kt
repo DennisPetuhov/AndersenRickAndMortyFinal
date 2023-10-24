@@ -18,6 +18,7 @@ import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.network.connectionmanager.ConnectionManager
 import com.example.andersenrickandmortyfinal.databinding.FragmentCharactersBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler.CharacterAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +33,10 @@ class CharactersFragment @Inject constructor() :
 
     private val vM by viewModels<CharactersViewModel>()
 
+
+    @Inject
+    lateinit var networkConnectionManager: ConnectionManager
+
     @Inject
     lateinit var characterAdapter: CharacterAdapter
 
@@ -43,12 +48,14 @@ class CharactersFragment @Inject constructor() :
 
 
     override fun observeViewModel() {
-
+        networkConnectionManager.startListenNetworkState()
         collectCharacter()
         observeNavigation(viewModel)
+        listenToInternet()
 
 
     }
+
 
     fun collectCharacter() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -67,30 +74,28 @@ class CharactersFragment @Inject constructor() :
     }
 
 
+
+//    private fun   setupEditTextSearch(){
+//        binding.search.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+//
+//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//                viewModel.onQueryChanged(p0.toString())
+//            }
+//
+//            override fun afterTextChanged(p0: Editable?) {}
+//        })
+//    }
+
     override fun setupViews() {
         val swipeToRefresh = binding.swiperefresh
         initRecycler(binding.recyclerview, characterAdapter)
         genderSpinner()
         statusSpinner()
 
-        binding.search.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.onQueryChanged(p0.toString())
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-
-
-        binding.idRadioGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
-            when (checkedId) {
-                R.id.nameRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Name)
-                R.id.typeRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Type)
-                R.id.speciesRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Species)
-                R.id.noneRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.None)
-            }
+        setupRadioButton()
+        setupEditTextSearch(binding.search){
+            viewModel.onQueryChanged(it)
         }
 
 
@@ -137,6 +142,19 @@ class CharactersFragment @Inject constructor() :
 
         swipeToRefresh(swipeToRefresh) { characterAdapter.refresh() }
     }
+
+    private fun setupRadioButton(){
+
+        binding.idRadioGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
+            when (checkedId) {
+                R.id.nameRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Name)
+                R.id.typeRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Type)
+                R.id.speciesRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Species)
+                R.id.noneRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.None)
+            }
+        }
+    }
+
 
 
     private fun fromAdapterToDetailsFragment() {

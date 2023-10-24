@@ -97,16 +97,18 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
         db.withTransaction { db.episodeKeyDao().deleteAllKey() }
     }
 
-    override fun getAllEpisodes(): PagingSource<Int, Episode> {
-        return db.episodeDao().getAllEpisodes()
+    override fun getAllEpisodes(queryString: String): PagingSource<Int, Episode> {
+        return db.episodeDao().getAllEpisodes(queryString)
     }
 
     override fun findEpisodeByName(queryString: String): PagingSource<Int, Episode> {
        return db.episodeDao().findEpisodeByName(queryString)
     }
 
-    override fun findEpisodeByCode(queryString: String): PagingSource<Int, Episode> {
-       return db.episodeDao().findEpisodeByCode(queryString)
+
+
+    override fun findEpisodeByEpisode(queryString: String): PagingSource<Int, Episode> {
+        return db.episodeDao().findEpisodeByEpisode(queryString)
     }
 
     override  fun getCachedEpisodes(episodeIds:List<Int>): PagingSource<Int, Episode> {
@@ -146,7 +148,7 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
        return db.locationDao().findLocationByDimension(queryString)
     }
 
-    override fun findLocationByType(queryString: String): PagingSource<Int, LocationRick> {
+    override fun findLocationByCode(queryString: String): PagingSource<Int, LocationRick> {
        return db.locationDao().findLocationByType(queryString)
     }
 
@@ -154,9 +156,7 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
      return   db.episodeDao().getSingleEpisodeById(id)
     }
 
-//    override suspend fun getCachedEpisodes(offset: Int, limit: Int, episodes:List<Int>): PagingSource<Int,Episode> {
-//        return  db.episodeDao().getCachedEpisodes(offset,limit,episodes)
-//    }
+
 
 
 }

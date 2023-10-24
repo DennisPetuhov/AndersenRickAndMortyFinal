@@ -15,5 +15,6 @@ sealed class TypeOfRequest {
     object Type : TypeOfRequest()
     object Code : TypeOfRequest()
     object Dimension:TypeOfRequest()
+    object Episode:TypeOfRequest()
 }
 

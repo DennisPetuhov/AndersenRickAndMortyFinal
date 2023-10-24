@@ -20,7 +20,7 @@ class EpisodeApiHelperImpl @Inject constructor(val service: EpisodeService) : Ep
 
     }
 
-    override fun getAllEpisodesByNameAndCode(
+    override fun getAllEpisodesByNameAndEpisode(
         type: TypeOfRequest,
         page: Int,
         query: String,

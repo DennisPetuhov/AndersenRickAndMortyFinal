@@ -21,7 +21,7 @@ import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
     [Character::class, CharacterRemoteKeys::class,
         EpisodesRemoteKeys::class, Episode::class,
     LocationRick::class, LocationRemoteKeys::class],
-    version = 4
+    version = 5
 )
 abstract class MainDatabase : RoomDatabase() {
     abstract fun characterDao(): CharacterDao

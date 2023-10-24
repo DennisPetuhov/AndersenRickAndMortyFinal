@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants.EPISODE_TABLE
 import com.example.andersenrickandmortyfinal.data.db.converter.StringListConverter
+import com.squareup.moshi.Json
 import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = EPISODE_TABLE)
@@ -14,7 +15,8 @@ import kotlinx.parcelize.Parcelize
 data class Episode(
     @PrimaryKey
     var id: Int = 0,
-    var air_date: String = "",
+    @Json(name="air_date")
+    var airDate: String = "",
     var characters: List<String> = listOf(),
     var created: String = "",
     var episode: String = "",

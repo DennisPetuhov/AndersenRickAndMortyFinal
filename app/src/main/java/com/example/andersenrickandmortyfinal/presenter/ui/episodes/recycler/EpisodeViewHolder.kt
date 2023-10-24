@@ -9,7 +9,7 @@ class EpisodeViewHolder(val binding: CharacterItemBinding) : RecyclerView.ViewHo
         item?.let {
             binding.name.text = it.name
             binding.gender.text = it.episode
-            binding.species.text = it.air_date
+            binding.species.text = it.airDate
 
 //            Glide.with(binding.root.context).load(it.image).into(binding.imageView)
 

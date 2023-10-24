@@ -28,6 +28,4 @@ data class Character(
     var type: String = "",
     var url: String = ""
 ) : Parcelable {
-
-
 }

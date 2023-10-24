@@ -43,6 +43,7 @@ class CharacterDetailsFragment @Inject constructor() :
 
         initRecycler()
         viewModel.getArguments(requireArguments())
+        listenToInternet()
     }
 
 

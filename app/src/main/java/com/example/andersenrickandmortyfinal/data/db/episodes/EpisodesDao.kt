@@ -14,8 +14,8 @@ interface EpisodesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(episodes: List<Episode>)
 
-    @Query("SELECT * FROM EPISODE_TABLE")
-    fun getAllEpisodes(): PagingSource<Int, Episode>
+    @Query("SELECT * FROM EPISODE_TABLE WHERE episode LIKE :queryString OR name LIKE :queryString")
+    fun getAllEpisodes(queryString: String): PagingSource<Int, Episode>
 
     @Query("DELETE FROM EPISODE_TABLE")
     fun deleteAll()
@@ -25,10 +25,7 @@ interface EpisodesDao {
     )
     fun findEpisodeByName(queryString: String): PagingSource<Int, Episode>
 
-    @Query(
-        "SELECT * FROM EPISODE_TABLE WHERE episode  LIKE :queryString  "
-    )
-    fun findEpisodeByCode(queryString: String): PagingSource<Int, Episode>
+
 
 
     @Query("SELECT * FROM EPISODE_TABLE WHERE id IN (:episodeIds)  ")
@@ -36,6 +33,9 @@ interface EpisodesDao {
 
     @Query("SELECT * FROM EPISODE_TABLE WHERE id LIKE :id ")
     fun getSingleEpisodeById(id: Int): Flow<Episode>
+
+    @Query("SELECT * FROM EPISODE_TABLE WHERE episode LIKE :queryString  ")
+    fun findEpisodeByEpisode(queryString: String): PagingSource<Int, Episode>
 
 
 }
