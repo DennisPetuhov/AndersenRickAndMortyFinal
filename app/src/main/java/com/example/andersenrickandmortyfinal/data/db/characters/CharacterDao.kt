@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.andersenrickandmortyfinal.data.model.character.Character
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -49,6 +50,9 @@ interface CharacterDao {
     "SELECT * FROM CHARACTER_TABLE WHERE id IN (:charactersIds) "
 )
    fun findCharactersById(charactersIds:List<Int>):PagingSource<Int,Character>
+
+   @Query("SELECT * FROM CHARACTER_TABLE WHERE id LIKE :id")
+   fun findCharacterById(id:Int): Flow<Character>
 
 
 }

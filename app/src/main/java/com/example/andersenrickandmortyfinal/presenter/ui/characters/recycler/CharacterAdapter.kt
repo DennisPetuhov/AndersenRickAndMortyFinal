@@ -4,38 +4,39 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import com.bumptech.glide.Glide
+import com.example.andersenrickandmortyfinal.data.base.BasePagedDataAdapter
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.databinding.CharacterItemBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.characters.OnClick
 import javax.inject.Inject
 
 class CharacterAdapter @Inject constructor() :
-    PagingDataAdapter<Character, CharacterViewHolder>(
+    BasePagedDataAdapter<Character, CharacterItemBinding>(
         MyUtil()
     ) {
-    private var onClick: OnClick? = null
-    fun bind(onClick: OnClick) {
-        this.onClick = onClick
-    }
-
-    override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
-        val item = getItem(position)
-        item?.let {
-            holder.bind(it)
-
-        }
-        holder.binding.characterItem.setOnClickListener {
-
-            item?.let { item -> onClick?.onClick(item) }
-
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
+    override fun createViewBinding(parent: ViewGroup): CharacterItemBinding {
         val binding =
             CharacterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CharacterViewHolder(binding)
+        return binding
+
     }
+
+    override fun bind(binding: CharacterItemBinding, item: Character) {
+
+        item?.let {
+            binding.name.text = it.name
+            binding.gender.text = it.gender
+            binding.species.text = it.species
+            binding.status.text = it.status
+
+            Glide.with(binding.root.context).load(it.image).into(binding.imageView)
+
+        }
+
+
+    }
+}
 
 
     class MyUtil : DiffUtil.ItemCallback<Character>() {
@@ -53,4 +54,3 @@ class CharacterAdapter @Inject constructor() :
             return oldItem == newItem
         }
     }
-}

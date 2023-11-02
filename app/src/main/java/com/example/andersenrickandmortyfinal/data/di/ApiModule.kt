@@ -11,7 +11,7 @@ import com.example.andersenrickandmortyfinal.data.network.api.location.LocationA
 import com.example.andersenrickandmortyfinal.data.network.api.location.LocationService
 import com.example.andersenrickandmortyfinal.data.network.connectionmanager.ConnectionManager
 import com.example.andersenrickandmortyfinal.data.network.connectionmanager.ConnectionManagerImpl
-import com.example.andersenrickandmortyfinal.domain.Utils
+import com.example.andersenrickandmortyfinal.domain.utils.Utils
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module

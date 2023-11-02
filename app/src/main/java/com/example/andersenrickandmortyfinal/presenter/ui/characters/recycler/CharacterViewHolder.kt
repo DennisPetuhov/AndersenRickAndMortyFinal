@@ -5,7 +5,8 @@ import com.bumptech.glide.Glide
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.databinding.CharacterItemBinding
 
-class CharacterViewHolder ( val binding: CharacterItemBinding): RecyclerView.ViewHolder(binding.root) {
+class CharacterViewHolder(val binding: CharacterItemBinding) :
+    RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Character) {
         item?.let {
             binding.name.text = it.name
@@ -18,6 +19,4 @@ class CharacterViewHolder ( val binding: CharacterItemBinding): RecyclerView.Vie
         }
 
     }
-
-
 }

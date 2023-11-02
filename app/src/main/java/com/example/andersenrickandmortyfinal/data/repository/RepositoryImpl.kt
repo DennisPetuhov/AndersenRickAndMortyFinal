@@ -1,22 +1,24 @@
 package com.example.andersenrickandmortyfinal.data.repository
 
-import android.content.Context
 import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
+import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
+import com.example.andersenrickandmortyfinal.data.model.character.Character
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterPojo
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import com.example.andersenrickandmortyfinal.data.model.episode.EpisodePojo
+import com.example.andersenrickandmortyfinal.data.model.location.LocationPojo
+import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
+import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
 import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelper
 import com.example.andersenrickandmortyfinal.data.network.api.location.LocationApiHelper
-import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
-import com.example.andersenrickandmortyfinal.data.model.character.Character
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
-import com.example.andersenrickandmortyfinal.data.model.episode.Episode
-import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
-import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import com.example.andersenrickandmortyfinal.data.paging.CharactersMediator
 import com.example.andersenrickandmortyfinal.data.paging.EpisodeMediator
 import com.example.andersenrickandmortyfinal.data.paging.LocationMediator
@@ -29,19 +31,18 @@ import javax.inject.Inject
 class RepositoryImpl @Inject constructor(
     private val characterApi: CharacterApiHelper,
     private val db: DatabaseHelper,
-    private val context: Context,
     private val episodeApi: EpisodeApiHelper,
     private val locationApi: LocationApiHelper
 ) : Repository {
 
 
     override fun getCachedEpisodes(
-               episodeIds: List<Int>
+        episodeIds: List<Int>
     ): Flow<PagingData<Episode>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 5
-                       ),
+            ),
             remoteMediator = EpisodesInCharacterMediator(
                 api = episodeApi,
                 database = db,
@@ -51,34 +52,50 @@ class RepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override fun getCachedCharacters(charactersIds: List<Int>): Flow<PagingData<Character>> {
-        return  Pager(
+    override fun getCachedCharacters(characterIds: List<Int>): Flow<PagingData<Character>> {
+        return Pager(
             config = PagingConfig(
                 pageSize = 5
             ),
             remoteMediator = CharactersMediatorInEpisodesAndLocationsDetails(
                 api = characterApi,
-                db=db,
-                list= charactersIds
+                db = db,
+                list = characterIds
             ),
-            pagingSourceFactory = {db.getCachedCharters(charactersIds)}
+            pagingSourceFactory = { db.findCachedCharters(characterIds) }
 
 
         ).flow
     }
 
     override fun getEpisodeByIdFromDb(id: Int): Flow<Episode> {
-     return   db.getEpisodeById(id)
+        return db.getEpisodeById(id)
     }
 
-    override fun getSingleEpisodesByIdFromApi(id: Int): Flow<Episode> {
-        return  episodeApi.getSingleEpisodesById(id)
+    override fun getSingleEpisodesByIdFromApi(id: Int): Flow<EpisodePojo> {
+        return episodeApi.getSingleEpisodesById(id)
+    }
+
+    override fun findCharacterByIdInDb(id: Int): Flow<Character> {
+        return db.findCharacterById(id)
+    }
+
+    override suspend fun getCharacterByIdFromApi(id: Int): Flow<CharacterPojo> {
+        return characterApi.getCharacterById(id)
+    }
+
+    override fun getSingleLocationByIdFromApi(id: Int): Flow<LocationPojo> {
+        return  locationApi.getLocationById(id)
+    }
+
+    override fun findLocationByIdFromDb(id: Int): Flow<LocationRick> {
+     return db.findLocationById(id)
     }
 
     override suspend fun getPagesOfAllCharacters(
         page: Int, gender: String,
         status: String
-    ): Flow<PagedResponse<Character>> {
+    ): Flow<PagedResponse<CharacterPojo>> {
         return characterApi.getPagesOfAllCharacters(page, gender, status)
     }
 
@@ -95,13 +112,11 @@ class RepositoryImpl @Inject constructor(
         gender: String,
         status: String
     ): Flow<PagingData<Character>> {
-        Log.d("QUERY SEARCH", "New query: $query + $status + ${type.toString()} + $gender")
+        Log.d("QUERY SEARCH", "New query: $query + $status + $type + $gender")
 
         val dbQuery = "%${query.replace(' ', '%')}%"
         val dbGender = "%${query.replace(' ', '%')}%"
         val dbStatus = "%${query.replace(' ', '%')}%"
-
-        println("REPOSITORYIMPL gender=$gender status =$status")
 
 
         return Pager(
@@ -113,7 +128,6 @@ class RepositoryImpl @Inject constructor(
             remoteMediator = CharactersMediator(
                 characterApiHelper = characterApi,
                 database = db,
-                context = context,
                 query = query,
                 type = type,
                 gender = gender,
@@ -194,7 +208,7 @@ class RepositoryImpl @Inject constructor(
     ): PagingSource<Int, LocationRick> {
         return when (type) {
             is TypeOfRequest.None -> {
-                db.getAllLocations()
+                db.getAllLocations(query)
 
             }
 
@@ -211,7 +225,7 @@ class RepositoryImpl @Inject constructor(
             }
 
             else -> {
-                db.getAllLocations()
+                db.getAllLocations(query)
             }
         }
     }

@@ -46,7 +46,7 @@ class ConnectionManagerImpl @Inject constructor(
             return
         }
 
-        // Reset state before start listening
+
         _currentNetwork.update {
             provideDefaultCurrentNetwork()
                 .copy(isListening = true)
@@ -108,11 +108,7 @@ class ConnectionManagerImpl @Inject constructor(
         }
     }
 
-    /**
-     * On Android 9, [ConnectivityManager.NetworkCallback.onBlockedStatusChanged] is not called when
-     * we call the [ConnectivityManager.registerDefaultNetworkCallback] function.
-     * Hence we assume that the network is unblocked by default.
-     */
+
     private fun provideDefaultCurrentNetwork(): CurrentNetwork {
         return CurrentNetwork(
             isListening = false,
@@ -130,8 +126,7 @@ class ConnectionManagerImpl @Inject constructor(
     )
 
     private fun CurrentNetwork.isConnected(): Boolean {
-        // Since we don't know the network state if NetworkCallback is not registered.
-        // We assume that it's disconnected.
+
         return isListening &&
                 isAvailable &&
                 !isBlocked &&
@@ -146,6 +141,7 @@ class ConnectionManagerImpl @Inject constructor(
                         hasTransport(NetworkCapabilities.TRANSPORT_VPN) ||
                         hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                         hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) -> true
+
         else -> false
     }
 }

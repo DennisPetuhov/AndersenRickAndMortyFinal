@@ -1,14 +1,13 @@
 package com.example.andersenrickandmortyfinal.presenter.ui.episodes.details
 
-import android.content.Context
 import android.os.Bundle
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import com.example.andersenrickandmortyfinal.data.model.episode.toEntity
 import com.example.andersenrickandmortyfinal.data.repository.Repository
-import com.example.andersenrickandmortyfinal.domain.utils.NetworkUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,28 +30,28 @@ class EpisodeDetailsViewModel @Inject constructor() : BaseViewModel() {
         MutableStateFlow(Episode())
     val episodeFlow: StateFlow<Episode> get() = _episodeFlow
 
-fun getSingleEpisodeByIdFromInternet(bundle: Bundle){
-    viewModelScope.launch {
-        val episode = getArguments(bundle)
+    fun getSingleEpisodeByIdFromInternet(bundle: Bundle) {
+        viewModelScope.launch {
+            val episode = getArguments(bundle)
 
-        repo.getSingleEpisodesByIdFromApi(episode.id).collect{
-            _episodeFlow.emit(it)
+            repo.getSingleEpisodesByIdFromApi(episode.id).collect {
+                val episode = it.toEntity()
+                _episodeFlow.emit(episode)
+            }
+
+
         }
 
-
     }
-
-}
-
 
 
     fun getSingleEpisodeFromDb(bundle: Bundle) {
         viewModelScope.launch {
             val episode = getArguments(bundle)
 
-          repo.getEpisodeByIdFromDb(episode.id).collect{
-              _episodeFlow.emit(it)
-          }
+            repo.getEpisodeByIdFromDb(episode.id).collect {
+                _episodeFlow.emit(it)
+            }
 
 
         }

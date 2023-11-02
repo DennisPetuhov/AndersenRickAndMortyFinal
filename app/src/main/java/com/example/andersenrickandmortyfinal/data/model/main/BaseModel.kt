@@ -1,23 +1,19 @@
-package com.example.andersenrickandmortyfinal.data.model.location
+package com.example.andersenrickandmortyfinal.data.model.main
 
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.andersenrickandmortyfinal.data.db.characters.Constants.LOCATION_TABLE
 import com.example.andersenrickandmortyfinal.data.db.converter.StringListConverter
 import kotlinx.parcelize.Parcelize
 
-@Parcelize
-@Entity(tableName = LOCATION_TABLE)
+
+@Entity
 @TypeConverters(StringListConverter::class)
-data class LocationRick(
+abstract class BaseModel(
     @PrimaryKey
     var id: Int = 0,
     var created: String = "",
-    var dimension: String = "",
     var name: String = "",
-    var residents: List<String> = listOf(),
-    var type: String = "",
     var url: String = ""
-) : Parcelable
+) {}

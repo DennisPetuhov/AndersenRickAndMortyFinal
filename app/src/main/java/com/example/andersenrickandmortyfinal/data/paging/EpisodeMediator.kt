@@ -4,19 +4,21 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelper
-import com.example.andersenrickandmortyfinal.data.db.characters.Constants
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
+import com.example.andersenrickandmortyfinal.data.db.characters.Constants
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import com.example.andersenrickandmortyfinal.data.model.episode.EpisodePojo
 import com.example.andersenrickandmortyfinal.data.model.episode.EpisodesRemoteKeys
+import com.example.andersenrickandmortyfinal.data.model.episode.toEntity
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
+import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelper
 import retrofit2.HttpException
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
-class EpisodeMediator (
+class EpisodeMediator(
 
     private val apiHelper: EpisodeApiHelper,
     private val database: DatabaseHelper,
@@ -53,17 +55,18 @@ class EpisodeMediator (
 
         }
         try {
-            var episodes = PagedResponse<Episode>(null)
-            println(" MEDIATOR EPISODE REQUEST  page=$page type=$type, query=$query")
-            apiHelper.getAllEpisodesByNameAndEpisode(page=page, type= type, query =  query).collect {
-                episodes = it
-            }
+            var episodes = PagedResponse<EpisodePojo>(null)
+
+            apiHelper.getAllEpisodesByNameAndEpisode(page = page, type = type, query = query)
+                .collect {
+                    episodes = it
+                }
 
 
-            val listOfEpisodes = episodes.results
-            println(listOfEpisodes)
+            val listOfPojo = episodes.results
 
-            val endOfPaginationReached = listOfEpisodes.isEmpty()
+
+            val endOfPaginationReached = listOfPojo.isEmpty()
             if (loadType == LoadType.REFRESH) {
                 database.deleteAllEpisodes()
                 database.deleteAllEpisodesKeys()
@@ -72,16 +75,15 @@ class EpisodeMediator (
             val prevKey = if (page == Constants.STARTING_PAGE_INDEX) null else page - 1
             val nextKey = if (endOfPaginationReached) null else page + 1
 
-            println("!!!!  prevKey $prevKey nextKey $nextKey")
 
-
-            val keys = listOfEpisodes.map {
+            val keys = listOfPojo.map {
                 EpisodesRemoteKeys(characterId = it.id, prevKey = prevKey, nextKey = nextKey)
             }
 
             database.insertAllEpisodesKeys(keys)
 
-            database.insertAllEpisodes(listOfEpisodes)
+            val episodesList= listOfPojo.map { it.toEntity() }
+            database.insertAllEpisodes(episodesList)
 
 
 

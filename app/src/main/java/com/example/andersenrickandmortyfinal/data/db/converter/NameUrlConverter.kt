@@ -1,7 +1,7 @@
 package com.example.andersenrickandmortyfinal.data.db.converter
 
 import androidx.room.TypeConverter
-import com.example.andersenrickandmortyfinal.data.model.NameUrl
+import com.example.andersenrickandmortyfinal.data.model.main.NameUrl
 import com.google.gson.Gson
 
 class NameUrlConverter {

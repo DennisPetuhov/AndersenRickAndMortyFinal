@@ -1,18 +1,19 @@
 package com.example.andersenrickandmortyfinal.data.paging
 
 
-import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants.STARTING_PAGE_INDEX
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.character.Character
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterPojo
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
+import com.example.andersenrickandmortyfinal.data.model.character.toEntity
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -20,7 +21,6 @@ import java.io.IOException
 class CharactersMediator(
     private val characterApiHelper: CharacterApiHelper,
     private val database: DatabaseHelper,
-    private val context: Context,
     private val query: String,
     private val type: TypeOfRequest,
 
@@ -61,16 +61,16 @@ class CharactersMediator(
 
         }
         try {
-            var characters = PagedResponse<Character>(null)
-            println(" MEDIATOR REQUEST  page=$page type=$type, query=$query, gender=$gender, status=$status")
+            var characters = PagedResponse<CharacterPojo>(null)
+
             characterApiHelper.getCharactersByQueryFlow(page, type, query, gender, status).collect {
                 characters = it
             }
 
 
-            val listOfRick = characters.results
+            val listOfPojo = characters.results
 
-            val endOfPaginationReached = listOfRick.isEmpty()
+            val endOfPaginationReached = listOfPojo.isEmpty()
             if (loadType == LoadType.REFRESH) {
                 database.deleteAllCharacters()
                 database.deleteAllCharactersKeys()
@@ -79,16 +79,18 @@ class CharactersMediator(
             val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
             val nextKey = if (endOfPaginationReached) null else page + 1
 
-            println("!!!!  prevKey $prevKey nextKey $nextKey")
 
-
-            val keys = listOfRick.map {
+            val keys = listOfPojo.map {
                 CharacterRemoteKeys(characterId = it.id, prevKey = prevKey, nextKey = nextKey)
             }
+            val listOfCharacter = listOfPojo.map {
+                it.toEntity()
+            }
+
 
             database.insertAllCharactersKeys(keys)
 
-            database.insertAllCharacters(listOfRick)
+            database.insertAllCharacters(listOfCharacter)
 
 
 
@@ -102,8 +104,7 @@ class CharactersMediator(
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, Character>): CharacterRemoteKeys? {
-        // Get the last page that was retrieved, that contained items.
-        // From that last page, get the last item
+
         return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { rick ->
 
@@ -112,11 +113,10 @@ class CharactersMediator(
     }
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, Character>): CharacterRemoteKeys? {
-        // Get the first page that was retrieved, that contained items.
-        // From that first page, get the first item
+
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { rick ->
-                // Get the remote keys of the first items retrieved
+
                 database.getNextPageKeySimple(rick.id)
             }
     }
@@ -124,8 +124,7 @@ class CharactersMediator(
     private suspend fun getRemoteKeyClosestToCurrentPosition(
         state: PagingState<Int, Character>
     ): CharacterRemoteKeys? {
-        // The paging library is trying to load data after the anchor position
-        // Get the item closest to the anchor position
+
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { rickId ->
                 database.getNextPageKeySimple(rickId)

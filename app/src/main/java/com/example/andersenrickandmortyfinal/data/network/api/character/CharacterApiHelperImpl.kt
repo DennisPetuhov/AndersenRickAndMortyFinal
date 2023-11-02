@@ -1,7 +1,8 @@
 package com.example.andersenrickandmortyfinal.data.network.api.character
 
 import com.example.andersenrickandmortyfinal.data.model.character.Character
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterPojo
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +18,7 @@ class CharacterApiHelperImpl @Inject constructor(private val characterService: C
         page: Int,
         gender: String,
         status: String
-    ): Flow<PagedResponse<Character>> {
+    ): Flow<PagedResponse<CharacterPojo>> {
         return flow {
             val response =
                 characterService.getPagesOfAllCharacters(page, gender, status)
@@ -32,15 +33,15 @@ class CharacterApiHelperImpl @Inject constructor(private val characterService: C
         query: String,
         gender: String,
         status: String
-    ): Flow<PagedResponse<Character>> {
+    ): Flow<PagedResponse<CharacterPojo>> {
         return flow {
             val response = when (type) {
 
 
                 is TypeOfRequest.None -> {
-                    println("API FLOW  $page , $gender, $status")
+
                     characterService.getPagesOfAllCharacters(page, gender, status)
-//                        apiService.getAllCharactersTest(page)
+
 
                 }
 
@@ -71,10 +72,17 @@ class CharacterApiHelperImpl @Inject constructor(private val characterService: C
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun getListOfCharacters(list: List<Int>): Flow<List<Character>> {
+    override suspend fun getListOfCharacters(list: List<Int>): Flow<List<CharacterPojo>> {
         return flow {
             val response = characterService.getListOfCharacters(list)
 
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun getCharacterById(id: Int): Flow<CharacterPojo> {
+        return flow {
+            val response = characterService.getCharacterById(id)
             emit(response)
         }.flowOn(Dispatchers.IO)
     }

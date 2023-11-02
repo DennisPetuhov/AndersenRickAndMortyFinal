@@ -4,11 +4,13 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.character.Character
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterPojo
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
+import com.example.andersenrickandmortyfinal.data.model.character.toEntity
+import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -47,15 +49,15 @@ class CharactersMediatorInEpisodesAndLocationsDetails(
 
         }
         try {
-            var myList = listOf<Character>()
+            var myList = listOf<CharacterPojo>()
             api.getListOfCharacters(list).collect {
                 myList = it
             }
 
 
-            val listOfCharacter = myList
+            val listOfPojo = myList
 
-            val endOfPaginationReached = listOfCharacter.isEmpty()
+            val endOfPaginationReached = listOfPojo.isEmpty()
             if (loadType == LoadType.REFRESH) {
                 db.deleteAllCharacters()
                 db.deleteAllCharactersKeys()
@@ -64,15 +66,18 @@ class CharactersMediatorInEpisodesAndLocationsDetails(
             val prevKey = if (page == Constants.STARTING_PAGE_INDEX) null else page - 1
             val nextKey = if (endOfPaginationReached) null else page + 1
 
-            println("!!!!  prevKey $prevKey nextKey $nextKey")
 
-
-            val keys = listOfCharacter.map {
+            val keys = listOfPojo.map {
                 CharacterRemoteKeys(characterId = it.id, prevKey = prevKey, nextKey = nextKey)
             }
 
             db.insertAllCharactersKeys(keys)
 
+
+
+            val listOfCharacter  = listOfPojo.map {
+               it.toEntity()
+            }
             db.insertAllCharacters(listOfCharacter)
 
 

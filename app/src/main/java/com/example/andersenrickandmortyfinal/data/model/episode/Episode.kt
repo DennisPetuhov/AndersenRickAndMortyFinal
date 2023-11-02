@@ -15,11 +15,10 @@ import kotlinx.parcelize.Parcelize
 data class Episode(
     @PrimaryKey
     var id: Int = 0,
-    @Json(name="air_date")
     var airDate: String = "",
     var characters: List<String> = listOf(),
     var created: String = "",
     var episode: String = "",
     var name: String = "",
     var url: String = ""
-) :  Parcelable
+) : Parcelable

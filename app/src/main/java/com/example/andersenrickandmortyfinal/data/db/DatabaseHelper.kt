@@ -47,7 +47,8 @@ interface DatabaseHelper {
         status: String
     ): PagingSource<Int, Character>
 
-    fun getCachedCharters(charactersIds: List<Int>): PagingSource<Int, Character>
+    fun findCachedCharters(charactersIds: List<Int>): PagingSource<Int, Character>
+    fun findCharacterById(id: Int): Flow<Character>
 
     //Episodes
     suspend fun insertAllEpisodes(list: List<Episode>)
@@ -61,16 +62,16 @@ interface DatabaseHelper {
     fun getCachedEpisodes(episodeIds: List<Int>): PagingSource<Int, Episode>
 
 
-
     //Locations
     suspend fun insertAllLocations(list: List<LocationRick>)
     suspend fun insertAllLocationsKeys(list: List<LocationRemoteKeys>)
     suspend fun deleteAllLocations()
     suspend fun deleteAllLocationsKeys()
-    fun getAllLocations(): PagingSource<Int, LocationRick>
+    fun getAllLocations(query:String): PagingSource<Int, LocationRick>
     fun findLocationByName(queryString: String): PagingSource<Int, LocationRick>
     fun findLocationByDimension(queryString: String): PagingSource<Int, LocationRick>
     fun findLocationByCode(queryString: String): PagingSource<Int, LocationRick>
 
     fun getEpisodeById(id: Int): Flow<Episode>
+    fun findLocationById(id: Int): Flow<LocationRick>
 }

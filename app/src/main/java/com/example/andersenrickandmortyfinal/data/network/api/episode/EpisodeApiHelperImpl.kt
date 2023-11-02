@@ -1,8 +1,9 @@
 package com.example.andersenrickandmortyfinal.data.network.api.episode
 
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import com.example.andersenrickandmortyfinal.data.model.episode.EpisodePojo
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -12,7 +13,7 @@ import javax.inject.Inject
 class EpisodeApiHelperImpl @Inject constructor(val service: EpisodeService) : EpisodeApiHelper {
 
 
-    override fun getListOfEpisodesByCharacter(list: List<Int>): Flow<List<Episode>> {
+    override fun getListOfEpisodesByCharacter(list: List<Int>): Flow<List<EpisodePojo>> {
         return flow {
             val response = service.getListOfEpisodesByCharacter(list as MutableList<Int>)
             emit(response)
@@ -25,7 +26,7 @@ class EpisodeApiHelperImpl @Inject constructor(val service: EpisodeService) : Ep
         page: Int,
         query: String,
 
-        ): Flow<PagedResponse<Episode>> {
+        ): Flow<PagedResponse<EpisodePojo>> {
         return flow {
             val response = when (type) {
                 is TypeOfRequest.Name -> {
@@ -53,7 +54,7 @@ class EpisodeApiHelperImpl @Inject constructor(val service: EpisodeService) : Ep
 
     }
 
-    override fun getSingleEpisodesById(id: Int): Flow<Episode> {
+    override fun getSingleEpisodesById(id: Int): Flow<EpisodePojo> {
         return flow {
             val response = service.getSingleEpisodesById(id)
             emit(response)

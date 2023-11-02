@@ -1,7 +1,8 @@
 package com.example.andersenrickandmortyfinal.data.network.api.character
 
 import com.example.andersenrickandmortyfinal.data.model.character.Character
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterPojo
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -13,7 +14,7 @@ interface CharacterApiHelper {
         page: Int,
         gender: String,
         status: String
-    ): Flow<PagedResponse<Character>>
+    ): Flow<PagedResponse<CharacterPojo>>
 
     suspend fun getCharactersByQueryFlow(
         page: Int,
@@ -21,7 +22,10 @@ interface CharacterApiHelper {
         query: String,
         gender: String,
         status: String
-    ): Flow<PagedResponse<Character>>
- suspend fun  getListOfCharacters(list:List<Int>):Flow<List<Character>>
+    ): Flow<PagedResponse<CharacterPojo>>
+ suspend fun  getListOfCharacters(list:List<Int>):Flow<List<CharacterPojo>>
+
+    suspend fun  getCharacterById(id:Int):Flow<CharacterPojo>
+
 
 }

@@ -6,12 +6,11 @@ import com.example.andersenrickandmortyfinal.databinding.CharacterItemBinding
 
 class EpisodeViewHolder(val binding: CharacterItemBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Episode) {
-        item?.let {
+        item.let {
             binding.name.text = it.name
             binding.gender.text = it.episode
             binding.species.text = it.airDate
 
-//            Glide.with(binding.root.context).load(it.image).into(binding.imageView)
 
         }
 

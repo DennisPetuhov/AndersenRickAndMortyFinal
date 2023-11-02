@@ -3,8 +3,8 @@ package com.example.andersenrickandmortyfinal.presenter.ui.episodes
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
-import com.example.andersenrickandmortyfinal.data.model.character.MyRequest
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.main.MyRequest
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +26,7 @@ class EpisodesViewModel @Inject constructor() : BaseViewModel() {
     lateinit var repo: Repository
 
 
-    val episodeQueryFlow =
+    private val episodeQueryFlow =
         MutableStateFlow(MyRequest(TypeOfRequest.None, "", "", ""))
 
     private var _episodeFlow: MutableStateFlow<PagingData<Episode>> =
@@ -60,6 +60,7 @@ class EpisodesViewModel @Inject constructor() : BaseViewModel() {
             episodeQueryFlow.emit(request)
         }
     }
+
     fun onRadioButtonChanged(type: TypeOfRequest) {
         val state = episodeQueryFlow.value.copy(typeOfRequest = type)
         episodeQueryFlow.value = state

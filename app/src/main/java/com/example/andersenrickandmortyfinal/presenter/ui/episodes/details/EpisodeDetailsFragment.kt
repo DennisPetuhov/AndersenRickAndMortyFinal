@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class EpisodeDetailsFragment :
+class EpisodeDetailsFragment @Inject constructor() :
     BaseFragment<FragmentEpisodeDetailsBinding, EpisodeDetailsViewModel>() {
 
     private val vM: EpisodeDetailsViewModel by viewModels()
@@ -37,7 +37,8 @@ class EpisodeDetailsFragment :
         viewModel.getCharacters(requireArguments())
         val swipeToRefresh = binding.swiperefresh
         initRecycler(binding.recyclerview, characterAdapter)
-        networkConnectionManager.startListenNetworkState()
+
+        startListenNetworkState()
         swipeToRefreshInDetailsFragment(swipeToRefresh, { characterAdapter.refresh() },
             { viewModel.getSingleEpisodeByIdFromInternet(requireArguments()) },
             { viewModel.getSingleEpisodeFromDb(requireArguments()) }
@@ -49,7 +50,6 @@ class EpisodeDetailsFragment :
 
 
     }
-
 
 
     override fun observeViewModel() {
@@ -84,7 +84,7 @@ class EpisodeDetailsFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.episodeFlow.collect {
-//                    println(it.air_date + "EEEEEEEEEEEEEEEEEE")
+
                     with(binding) {
                         name.text = it.name
                         airDate.text = it.airDate

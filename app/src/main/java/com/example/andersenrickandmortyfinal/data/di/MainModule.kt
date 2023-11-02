@@ -1,16 +1,14 @@
 package com.example.andersenrickandmortyfinal.data.di
 
-import android.content.Context
+import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
 import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelper
 import com.example.andersenrickandmortyfinal.data.network.api.location.LocationApiHelper
-import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import com.example.andersenrickandmortyfinal.data.repository.RepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -25,14 +23,12 @@ class MainModule {
     fun provideRepository(
         characterApiHelper: CharacterApiHelper,
         database: DatabaseHelper,
-        @ApplicationContext context: Context,
         episodeApiHelper: EpisodeApiHelper,
         locationApiHelper: LocationApiHelper
     ): Repository {
         return RepositoryImpl(
             characterApiHelper,
             database,
-            context,
             episodeApiHelper,
             locationApiHelper
         )

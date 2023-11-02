@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/swiperefresh"
     tools:context=".presenter.ui.characters.details.CharacterDetailsFragment">
 
 
@@ -42,11 +43,9 @@
                 android:id="@+id/speciesChDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:text="TextView"
                 app:layout_constraintBottom_toBottomOf="@+id/statusChDetails"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/imageChDeteils"
                 app:layout_constraintStart_toEndOf="@+id/statusChDetails"
                 app:layout_constraintTop_toTopOf="@+id/statusChDetails" />
 
@@ -79,11 +78,9 @@
                 android:id="@+id/originChDetails6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:text="TextView"
                 app:layout_constraintBottom_toBottomOf="@+id/genderChDetails"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/imageChDeteils"
                 app:layout_constraintStart_toEndOf="@+id/genderChDetails"
                 app:layout_constraintTop_toTopOf="@+id/genderChDetails" />
 
@@ -93,18 +90,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="TextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/genderChDetails"
+                app:layout_constraintStart_toStartOf="@+id/genderChDetails"
                 app:layout_constraintTop_toBottomOf="@+id/genderChDetails" />
 
             <ImageView
                 android:id="@+id/imageChDeteils"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/locationChDetails"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:src="@tools:sample/avatars" />
 
             <androidx.recyclerview.widget.RecyclerView

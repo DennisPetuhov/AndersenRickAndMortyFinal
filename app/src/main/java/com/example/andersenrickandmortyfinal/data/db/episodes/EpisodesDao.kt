@@ -26,8 +26,6 @@ interface EpisodesDao {
     fun findEpisodeByName(queryString: String): PagingSource<Int, Episode>
 
 
-
-
     @Query("SELECT * FROM EPISODE_TABLE WHERE id IN (:episodeIds)  ")
     fun getCachedEpisodes(episodeIds: List<Int>): PagingSource<Int, Episode>
 

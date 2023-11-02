@@ -1,12 +1,12 @@
-package com.example.andersenrickandmortyfinal.data.model.character
+package com.example.andersenrickandmortyfinal.data.model.main
 
 data class MyRequest(
     val typeOfRequest: TypeOfRequest,
-    var query: String="",
-    val gender: String="",
-    var status: String="",
+    var query: String = "",
+    val gender: String = "",
+    var status: String = "",
 
-)
+    )
 
 sealed class TypeOfRequest {
     object None : TypeOfRequest()
@@ -14,7 +14,7 @@ sealed class TypeOfRequest {
     object Species : TypeOfRequest()
     object Type : TypeOfRequest()
     object Code : TypeOfRequest()
-    object Dimension:TypeOfRequest()
-    object Episode:TypeOfRequest()
+    object Dimension : TypeOfRequest()
+    object Episode : TypeOfRequest()
 }
 

@@ -1,10 +1,10 @@
-package com.example.andersenrickmorty.presenter.ui.locations
+package com.example.andersenrickandmortyfinal.presenter.ui.locations
 
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
-import com.example.andersenrickandmortyfinal.data.model.character.MyRequest
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.main.MyRequest
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +22,7 @@ class LocationsViewModel @Inject constructor() : BaseViewModel() {
 
     }
 
-    val locationQueryFlow =
+    private val locationQueryFlow =
         MutableStateFlow(MyRequest(TypeOfRequest.None, ""))
 
     private var _locationFlow: MutableStateFlow<PagingData<LocationRick>> =
@@ -53,12 +53,14 @@ class LocationsViewModel @Inject constructor() : BaseViewModel() {
 
         }
     }
+
     fun onQueryChanged(query: String) {
         viewModelScope.launch {
             val request = locationQueryFlow.value.copy(query = query)
-                locationQueryFlow.emit(request)
+            locationQueryFlow.emit(request)
         }
     }
+
     fun onRadioButtonChanged(type: TypeOfRequest) {
         val state = locationQueryFlow.value.copy(typeOfRequest = type)
         locationQueryFlow.value = state

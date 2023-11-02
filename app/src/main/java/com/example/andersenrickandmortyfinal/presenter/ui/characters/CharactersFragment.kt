@@ -1,7 +1,5 @@
 package com.example.andersenrickandmortyfinal.presenter.ui.characters
 
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +12,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
+import com.example.andersenrickandmortyfinal.data.base.MyAdapter
 import com.example.andersenrickandmortyfinal.data.model.character.Character
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.network.connectionmanager.ConnectionManager
 import com.example.andersenrickandmortyfinal.databinding.FragmentCharactersBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler.CharacterAdapter
@@ -30,16 +30,15 @@ import javax.inject.Inject
 class CharactersFragment @Inject constructor() :
     BaseFragment<FragmentCharactersBinding, CharactersViewModel>() {
 
-
     private val vM by viewModels<CharactersViewModel>()
-
 
     @Inject
     lateinit var networkConnectionManager: ConnectionManager
 
     @Inject
     lateinit var characterAdapter: CharacterAdapter
-
+//    lateinit var characterAdapter: MyAdapter
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
 
     override val viewModel: CharactersViewModel
         get() = vM
@@ -57,7 +56,7 @@ class CharactersFragment @Inject constructor() :
     }
 
 
-    fun collectCharacter() {
+    private fun collectCharacter() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.charactersFlow.collectLatest {
@@ -73,54 +72,41 @@ class CharactersFragment @Inject constructor() :
 
     }
 
-
-
-//    private fun   setupEditTextSearch(){
-//        binding.search.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-//
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                viewModel.onQueryChanged(p0.toString())
-//            }
-//
-//            override fun afterTextChanged(p0: Editable?) {}
-//        })
-//    }
-
     override fun setupViews() {
-        val swipeToRefresh = binding.swiperefresh
+        swipeToRefresh = binding.swiperefresh
         initRecycler(binding.recyclerview, characterAdapter)
         genderSpinner()
         statusSpinner()
-
         setupRadioButton()
-        setupEditTextSearch(binding.search){
+        setupEditTextSearch(binding.search) {
             viewModel.onQueryChanged(it)
         }
 
 
 
+        setupVisibility()
 
+        fromAdapterToDetailsFragment()
 
+        swipeToRefresh(swipeToRefresh) { characterAdapter.refresh() }
+    }
+
+    private fun setupVisibility() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 characterAdapter.loadStateFlow.collectLatest { loadState ->
                     swipeToRefresh.isRefreshing = loadState.refresh is LoadState.Loading
 
-                    //
+
                     val isListEmpty =
                         loadState.refresh is LoadState.NotLoading && characterAdapter.itemCount == 0
-                    // show empty list
-                    binding.emptyList.isVisible = characterAdapter.itemCount == 0
-                    // Only show the list if refresh succeeds.
-                    binding.recyclerview.isVisible = !isListEmpty
-                    // Show loading spinner during initial load or refresh.
-//                    binding.progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                    // Show the retry state if initial load or refresh fails.
-                    binding.retryButton.isVisible = loadState.source.refresh is LoadState.Error
 
-                    // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
+                    binding.emptyList.isVisible = characterAdapter.itemCount == 0
+
+                    binding.recyclerview.isVisible = !isListEmpty
+
+                    binding.retryButton.isVisible = loadState.source.refresh is LoadState.Error
                     val errorState = loadState.source.append as? LoadState.Error
                         ?: loadState.source.prepend as? LoadState.Error
                         ?: loadState.append as? LoadState.Error
@@ -128,24 +114,19 @@ class CharactersFragment @Inject constructor() :
                     errorState?.let {
                         Toast.makeText(
                             requireContext(),
-                            "\uD83D\uDE28 Wooops ${it.error}",
+                            "${it.error}",
                             Toast.LENGTH_LONG
                         ).show()
-                        //
+
                     }
                 }
             }
         }
-
-//        rickAdapter.refresh()
-        fromAdapterToDetailsFragment()
-
-        swipeToRefresh(swipeToRefresh) { characterAdapter.refresh() }
     }
 
-    private fun setupRadioButton(){
+    private fun setupRadioButton() {
 
-        binding.idRadioGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
+        binding.idRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.nameRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Name)
                 R.id.typeRadio -> viewModel.onRadioButtonChanged(TypeOfRequest.Type)
@@ -154,7 +135,6 @@ class CharactersFragment @Inject constructor() :
             }
         }
     }
-
 
 
     private fun fromAdapterToDetailsFragment() {
@@ -198,7 +178,7 @@ class CharactersFragment @Inject constructor() :
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // write code to perform some action
+
             }
         }
     }
@@ -229,7 +209,7 @@ class CharactersFragment @Inject constructor() :
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    // write code to perform some action
+
                 }
             }
         }

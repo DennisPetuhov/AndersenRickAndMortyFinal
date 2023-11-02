@@ -4,15 +4,16 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.example.andersenrickandmortyfinal.data.network.api.location.LocationApiHelper
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.db.characters.Constants
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
-import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import com.example.andersenrickandmortyfinal.data.model.location.LocationPojo
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
+import com.example.andersenrickandmortyfinal.data.model.location.toEntity
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.network.api.location.LocationApiHelper
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -54,17 +55,17 @@ class LocationMediator
 
         }
         try {
-            var locations = PagedResponse<LocationRick>(null)
-            println(" MEDIATOR Location REQUEST  page=$page type=$type, query=$query")
+            var locationPojo = PagedResponse<LocationPojo>(null)
+
             apiHelper.getAllLocations(page = page, type = type, query = query).collect {
-                locations = it
+                locationPojo = it
             }
 
 
-            val listOfLocations = locations.results
-            println(listOfLocations)
+            val listOfPojo = locationPojo.results
 
-            val endOfPaginationReached = listOfLocations.isEmpty()
+
+            val endOfPaginationReached = listOfPojo.isEmpty()
             if (loadType == LoadType.REFRESH) {
                 database.deleteAllLocations()
                 database.deleteAllLocationsKeys()
@@ -73,16 +74,15 @@ class LocationMediator
             val prevKey = if (page == Constants.STARTING_PAGE_INDEX) null else page - 1
             val nextKey = if (endOfPaginationReached) null else page + 1
 
-            println("!!!!  prevKey $prevKey nextKey $nextKey")
 
-
-            val keys = listOfLocations.map {
+            val keys = listOfPojo.map {
                 LocationRemoteKeys(locationId = it.id, prevKey = prevKey, nextKey = nextKey)
             }
 
             database.insertAllLocationsKeys(keys)
 
-            database.insertAllLocations(listOfLocations)
+            val newList= listOfPojo.map { it.toEntity() }
+            database.insertAllLocations(newList)
 
 
 
@@ -106,7 +106,7 @@ class LocationMediator
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, LocationRick>): CharacterRemoteKeys? {
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { location ->
-                // Get the remote keys of the first items retrieved
+
                 database.getNextPageKeySimple(location.id)
             }
     }

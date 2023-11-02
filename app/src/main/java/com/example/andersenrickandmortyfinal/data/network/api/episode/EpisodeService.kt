@@ -1,6 +1,6 @@
 package com.example.andersenrickandmortyfinal.data.network.api.episode
 
-import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import com.example.andersenrickandmortyfinal.data.model.episode.EpisodePojo
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -12,13 +12,13 @@ interface EpisodeService {
     suspend fun getListOfEpisodesByCharacter(
         @Path("list")
         list: MutableList<Int>
-    ): List<Episode>
+    ): List<EpisodePojo>
 
     @GET("episode")
     suspend fun getAllEpisodes(
         @Query("page")
         page: Int
-    ): PagedResponse<Episode>
+    ): PagedResponse<EpisodePojo>
 
     @GET("episode")
     suspend fun getAllEpisodesByName(
@@ -26,7 +26,7 @@ interface EpisodeService {
         page: Int,
         @Query("name")
         name: String,
-    ): PagedResponse<Episode>
+    ): PagedResponse<EpisodePojo>
 
     @GET("episode")
     suspend fun getAllEpisodesByCode(
@@ -34,11 +34,11 @@ interface EpisodeService {
         page: Int,
         @Query("code")
         code: String,
-    ): PagedResponse<Episode>
+    ): PagedResponse<EpisodePojo>
 
     @GET("episode/{id}")
     suspend fun getSingleEpisodesById(
         @Path("id")
         page: Int
-    ): Episode
+    ): EpisodePojo
 }

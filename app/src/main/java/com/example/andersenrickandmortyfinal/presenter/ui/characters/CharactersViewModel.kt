@@ -4,8 +4,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
 import com.example.andersenrickandmortyfinal.data.model.character.Character
-import com.example.andersenrickandmortyfinal.data.model.character.MyRequest
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.main.MyRequest
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +26,7 @@ class CharactersViewModel @Inject constructor() : BaseViewModel() {
     lateinit var repo: Repository
 
 
-    val queryFlow =
+    private val queryFlow =
         MutableStateFlow(MyRequest(TypeOfRequest.None, "", "", ""))
 
 
@@ -36,9 +36,6 @@ class CharactersViewModel @Inject constructor() : BaseViewModel() {
         )
     val charactersFlow: StateFlow<PagingData<Character>>
         get() = _charactersFlow
-
-
-
 
 
     fun onQueryChanged(query: String) {
@@ -92,7 +89,6 @@ class CharactersViewModel @Inject constructor() : BaseViewModel() {
 
         }
     }
-
 
 
 }

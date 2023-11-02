@@ -57,6 +57,10 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
         observeViewModel()
     }
 
+    protected fun startListenNetworkState() {
+        connectionManager.startListenNetworkState()
+    }
+
 
     protected fun <T : Any, VH : ViewHolder> initRecycler(
         recyclerView: RecyclerView,
@@ -87,10 +91,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
                     fromInternet()
                 } else {
                     fromDb()
-
-
                 }
-
 
             }
             .launchIn(lifecycleScope)
@@ -106,7 +107,34 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
 
             connectionManager.isNetworkConnectedFlow
                 .onEach {
-                    println("CONNECTION MANAGER$it")
+                    if (it) {
+                        adapter()
+                        swipeToRefresh.isRefreshing = false
+                        fromInternet()
+                        showToastHaveInternet()
+
+                    } else {
+                        swipeToRefresh.isRefreshing = false
+                        fromDb()
+                        showToastNoInternet()
+
+                    }
+
+
+                }
+                .launchIn(lifecycleScope)
+        }
+    }
+
+    protected fun swipeToRefresh(
+        swipeToRefresh: SwipeRefreshLayout,
+        adapter: () -> Unit
+    ) {
+        swipeToRefresh.setOnRefreshListener {
+
+            connectionManager.isNetworkConnectedFlow
+                .onEach {
+
                     if (it) {
                         adapter()
                         swipeToRefresh.isRefreshing = false
@@ -121,144 +149,100 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
 
                 }
                 .launchIn(lifecycleScope)
-        }}
 
-            protected fun swipeToRefresh(
-                swipeToRefresh: SwipeRefreshLayout,
-                adapter: () -> Unit
-            ) {
-                swipeToRefresh.setOnRefreshListener {
-//            if (NetworkUtils.isNetworkAvailable(requireContext())) {
-//                adapter()
-//                swipeToRefresh.isRefreshing = false
-//                showToastHaveInternet()
-//            } else {
-//                swipeToRefresh.isRefreshing = false
-//                showToastNoInternet()
-//            }
-
-                    connectionManager.isNetworkConnectedFlow
-                        .onEach {
-                            println("CONNECTION MANAGER$it")
-                            if (it) {
-                                adapter()
-                                swipeToRefresh.isRefreshing = false
-                                showToastHaveInternet()
-
-                            } else {
-                                swipeToRefresh.isRefreshing = false
-                                showToastNoInternet()
-
-                            }
+        }
+    }
 
 
-                        }
-                        .launchIn(lifecycleScope)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    protected fun showToastNoInternet() {
+        Toast.makeText(
+            requireContext(),
+            requireContext().getString(R.string.no_internet),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    protected fun showToastHaveInternet() {
+        Toast.makeText(
+            requireContext(),
+            requireContext().getString(R.string.yes_internet),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
 
 
-//            NetworkUtils.isNetworkAvailable2(requireContext(), lifecycleScope).onEach {
-//                println("CONNETTION MANAGER$it")
-//                if (it) {
-//                    adapter()
-//                    swipeToRefresh.isRefreshing = false
-//                    showToastHaveInternet()
-//                } else {
-//                    swipeToRefresh.isRefreshing = false
-//                    showToastNoInternet()
-//                }
-//            }.launchIn(lifecycleScope)
-                }
+    protected abstract fun setupViews()
+
+    protected abstract fun observeViewModel()
+
+
+    protected fun handleNavigation(navigationCommand: NavigationCommand) {
+        when (navigationCommand) {
+            is NavigationCommand.Back -> {
+                findNavController().navigateUp()
             }
 
-
-            override fun onDestroyView() {
-                super.onDestroyView()
-                _binding = null
+            is NavigationCommand.ToDirections -> {
+                findNavController().navigate(navigationCommand.directions)
             }
 
-            protected fun showToastNoInternet() {
-                Toast.makeText(
-                    requireContext(),
-                    requireContext().getString(R.string.no_internet),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            is NavigationCommand.Null -> null
 
-            protected fun showToastHaveInternet() {
-                Toast.makeText(
-                    requireContext(),
-                    requireContext().getString(R.string.yes_internet),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        }
 
 
-            protected abstract fun setupViews()
+    }
 
-            protected abstract fun observeViewModel()
-
-
-            protected fun handleNavigation(navigationCommand: NavigationCommand) {
-                when (navigationCommand) {
-                    is NavigationCommand.Back -> {
-                        findNavController().navigateUp()
-                    }
-
-                    is NavigationCommand.ToDirections -> {
-                        findNavController().navigate(navigationCommand.directions)
-                    }
-
-                    is NavigationCommand.Null -> null
-
-                }
-
-
-            }
-
-            protected fun observeNavigation(viewModel: BaseViewModel) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    repeatOnLifecycle(Lifecycle.State.STARTED)
-                    {
-                        viewModel.navigation.collect {
-                            handleNavigation(it)
-                        }
-
-                    }
+    protected fun observeNavigation(viewModel: BaseViewModel) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED)
+            {
+                viewModel.navigation.collect {
+                    handleNavigation(it)
                 }
 
             }
+        }
 
-            override fun onAttach(context: Context) {
-                super.onAttach(context)
-                val callback: OnBackPressedCallback =
-                    object : OnBackPressedCallback(true) {
-                        override fun handleOnBackPressed() {
+    }
 
-                            backPressed()
-                        }
-                    }
-                requireActivity().onBackPressedDispatcher.addCallback(
-                    this,
-                    callback
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
 
-                )
-
-
+                    backPressed()
+                }
             }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            callback
 
-            protected abstract fun backPressed()
+        )
 
 
-    protected fun   setupEditTextSearch(editText:EditText,onQueryChanged:(String)->Unit ){
+    }
+
+    protected abstract fun backPressed()
+
+
+    protected fun setupEditTextSearch(editText: EditText, onQueryChanged: (String) -> Unit) {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-               onQueryChanged(p0.toString())
+                onQueryChanged(p0.toString())
             }
+
             override fun afterTextChanged(p0: Editable?) {}
         })
     }
 
 
-        }
+}

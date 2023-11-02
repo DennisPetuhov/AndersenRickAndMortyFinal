@@ -1,8 +1,10 @@
 package com.example.andersenrickandmortyfinal.data.network.api.location
 
+import com.example.andersenrickandmortyfinal.data.model.location.LocationPojo
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface LocationService {
@@ -11,7 +13,7 @@ interface LocationService {
     suspend fun getAllLocations(
         @Query("page")
         page: Int
-    ): PagedResponse<LocationRick>
+    ): PagedResponse<LocationPojo>
 
     @GET("location")
     suspend fun getAllLocationsByDimension(
@@ -19,7 +21,7 @@ interface LocationService {
         page: Int,
         @Query("dimension")
         dimension: String
-    ): PagedResponse<LocationRick>
+    ): PagedResponse<LocationPojo>
 
     @GET("location")
     suspend fun getAllLocationsByType(
@@ -27,7 +29,7 @@ interface LocationService {
         page: Int,
         @Query("type")
         type: String
-    ): PagedResponse<LocationRick>
+    ): PagedResponse<LocationPojo>
 
     @GET("location")
     suspend fun getAllLocationsByName(
@@ -35,5 +37,8 @@ interface LocationService {
         page: Int,
         @Query("name")
         name: String
-    ): PagedResponse<LocationRick>
+    ): PagedResponse<LocationPojo>
+
+    @GET("location/{id}")
+    suspend fun getLocationById(@Path("id") id: Int): LocationPojo
 }

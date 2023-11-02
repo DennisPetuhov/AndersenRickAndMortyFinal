@@ -2,8 +2,8 @@ package com.example.andersenrickandmortyfinal.data.db
 
 import androidx.paging.PagingSource
 import androidx.room.withTransaction
-import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.character.Character
+import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.episode.EpisodesRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRemoteKeys
@@ -77,6 +77,14 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
         return db.characterDao().findALLCharacters(queryString)
     }
 
+   override fun findCharacterById(id:Int): Flow<Character>{
+       return db.characterDao().findCharacterById(id)
+
+    }
+
+
+
+
     override suspend fun insertAllEpisodes(list: List<Episode>) {
         return db.withTransaction {
             db.episodeDao().insertAll(list)
@@ -102,21 +110,20 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
     }
 
     override fun findEpisodeByName(queryString: String): PagingSource<Int, Episode> {
-       return db.episodeDao().findEpisodeByName(queryString)
+        return db.episodeDao().findEpisodeByName(queryString)
     }
-
 
 
     override fun findEpisodeByEpisode(queryString: String): PagingSource<Int, Episode> {
         return db.episodeDao().findEpisodeByEpisode(queryString)
     }
 
-    override  fun getCachedEpisodes(episodeIds:List<Int>): PagingSource<Int, Episode> {
-      return  db.episodeDao().getCachedEpisodes(episodeIds)
+    override fun getCachedEpisodes(episodeIds: List<Int>): PagingSource<Int, Episode> {
+        return db.episodeDao().getCachedEpisodes(episodeIds)
     }
 
-    override fun getCachedCharters(charactersIds: List<Int>): PagingSource<Int, Character> {
-        return  db.characterDao().findCharactersById(charactersIds)
+    override fun findCachedCharters(charactersIds: List<Int>): PagingSource<Int, Character> {
+        return db.characterDao().findCharactersById(charactersIds)
     }
 
 
@@ -136,27 +143,29 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
         db.locationKeyDao().deleteAllKey()
     }
 
-    override fun getAllLocations(): PagingSource<Int, LocationRick> {
-    return  db.locationDao().getAllLocations()
+    override fun getAllLocations(query:String): PagingSource<Int, LocationRick> {
+        return db.locationDao().getAllLocations(query)
     }
 
     override fun findLocationByName(queryString: String): PagingSource<Int, LocationRick> {
-     return   db.locationDao().findLocationByName(queryString)
+        return db.locationDao().findLocationByName(queryString)
     }
 
     override fun findLocationByDimension(queryString: String): PagingSource<Int, LocationRick> {
-       return db.locationDao().findLocationByDimension(queryString)
+        return db.locationDao().findLocationByDimension(queryString)
     }
 
     override fun findLocationByCode(queryString: String): PagingSource<Int, LocationRick> {
-       return db.locationDao().findLocationByType(queryString)
+        return db.locationDao().findLocationByType(queryString)
     }
 
     override fun getEpisodeById(id: Int): Flow<Episode> {
-     return   db.episodeDao().getSingleEpisodeById(id)
+        return db.episodeDao().getSingleEpisodeById(id)
     }
 
-
+    override fun findLocationById(id: Int): Flow<LocationRick> {
+        return db.locationDao().findLocationById(id)
+    }
 
 
 }

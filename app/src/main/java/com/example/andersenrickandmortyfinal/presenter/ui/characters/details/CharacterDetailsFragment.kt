@@ -3,9 +3,13 @@ package com.example.andersenrickandmortyfinal.presenter.ui.characters.details
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
+import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.databinding.FragmentCharacterDeteilsBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.episodes.recycler.EpisodesAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,10 +34,20 @@ class CharacterDetailsFragment @Inject constructor() :
         FragmentCharacterDeteilsBinding::inflate
 
     override fun setupViews() {
-
+        val swipeToRefresh = binding.swiperefresh
 
         viewModel.getEpisodes(requireArguments())
 
+        getDetailsInDetailsFragment(
+            { viewModel.getCharacterFromApi(requireArguments()) },
+            { viewModel.findCharacterInDb(requireArguments()) })
+        swipeToRefreshInDetailsFragment(
+            swipeToRefresh,
+            { episodeAdapter.refresh() },
+            { viewModel.getCharacterFromApi(requireArguments()) },
+            { viewModel.findCharacterInDb(requireArguments()) },
+        )
+        setupDetails()
 
 
     }
@@ -44,6 +58,31 @@ class CharacterDetailsFragment @Inject constructor() :
         initRecycler()
         viewModel.getArguments(requireArguments())
         listenToInternet()
+        fromAdapterToEpisodeDetailsFragment()
+        onOriginPress()
+        onLocationPress()
+    }
+
+    private fun onOriginPress(){
+        binding.originChDetails6.setOnClickListener{
+         val location=   viewModel.getLocation(requireArguments())
+          val direction=
+              CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToLocationDetailsFragment(location)
+            viewModel.navigate(direction)
+
+
+        }
+    }
+
+    private fun onLocationPress(){
+        binding.locationChDetails.setOnClickListener{
+            val location=   viewModel.getOrigin(requireArguments())
+            val direction=
+                CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToLocationDetailsFragment(location)
+            viewModel.navigate(direction)
+
+
+        }
     }
 
 
@@ -62,28 +101,52 @@ class CharacterDetailsFragment @Inject constructor() :
     }
 
 
-
-
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        val callback: OnBackPressedCallback =
-//            object : OnBackPressedCallback(true) {
-//                override fun handleOnBackPressed() {
-//                    val direction =
-//                        CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToNavigationHome()
-//                    viewModel.navigate(direction)
-//                }
-//            }
-//        requireActivity().onBackPressedDispatcher.addCallback(
-//            this,
-//            callback
-//
-//        )
-//    }
-
     override fun backPressed() {
-                val direction =
+        val direction =
             CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToNavigationHome()
+        viewModel.navigate(direction)
+    }
+
+    private fun setupDetails() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                viewModel.characterFlow.collect {
+                    with(binding) {
+                        nameChDetails.text = it.name
+                        statusChDetails.text = it.status
+                        speciesChDetails.text = it.species
+                        typeChDetails.text = it.type
+                        genderChDetails.text = it.gender
+                        originChDetails6.text = it.origin.name
+                        locationChDetails.text = it.location.name
+                        Glide.with(requireContext()).load(it.image).into(imageChDeteils)
+
+
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+    private fun fromAdapterToEpisodeDetailsFragment() {
+        episodeAdapter.bind {
+            navigateToEpisodeDetailsFragment(it as Episode)
+
+
+        }
+
+    }
+
+    private fun navigateToEpisodeDetailsFragment(item: Episode) {
+
+        val direction
+        =CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToEpisodeDetailsFragment(item)
+
+
         viewModel.navigate(direction)
     }
 }

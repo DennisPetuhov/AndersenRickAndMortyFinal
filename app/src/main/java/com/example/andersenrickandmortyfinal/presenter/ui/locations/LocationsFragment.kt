@@ -2,17 +2,20 @@ package com.example.andersenrickandmortyfinal.presenter.ui.locations
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.LoadState
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
-import com.example.andersenrickandmortyfinal.data.model.character.TypeOfRequest
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import com.example.andersenrickandmortyfinal.databinding.FragmentLocationsBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.locations.recycler.LocationAdapter
-import com.example.andersenrickmorty.presenter.ui.locations.LocationsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -30,10 +33,11 @@ class LocationsFragment @Inject constructor() :
         get() = vm
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentLocationsBinding
         get() = FragmentLocationsBinding::inflate
+    private lateinit var swipeToRefresh: SwipeRefreshLayout
 
 
     override fun setupViews() {
-        val swipeToRefresh = binding.swiperefresh
+        swipeToRefresh = binding.swiperefresh
         initRecycler(binding.recyclerview, locationAdapter)
         swipeToRefresh(swipeToRefresh) {
             locationAdapter.refresh()
@@ -42,6 +46,7 @@ class LocationsFragment @Inject constructor() :
             viewModel.onQueryChanged(it)
         }
         setupRadioButton()
+        setupVisibility()
 
 
     }
@@ -57,18 +62,6 @@ class LocationsFragment @Inject constructor() :
             }
         }
     }
-
-//    fun   setupEditTextSearch(){
-//      val a =  binding.search
-//                val b=  binding.search.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-//
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                viewModel.onQueryChanged(p0.toString())
-//            }
-//            override fun afterTextChanged(p0: Editable?) {}
-//        })
-//    }
 
 
     override fun observeViewModel() {
@@ -108,6 +101,38 @@ class LocationsFragment @Inject constructor() :
         val direction =
             LocationsFragmentDirections.actionLocatonFragmentToLocationDetailsFragment(item)
         viewModel.navigate(direction)
+    }
+
+    private fun setupVisibility() {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                locationAdapter.loadStateFlow.collectLatest { loadState ->
+                    swipeToRefresh.isRefreshing = loadState.refresh is LoadState.Loading
+
+                    val isListEmpty =
+                        loadState.refresh is LoadState.NotLoading && locationAdapter.itemCount == 0
+
+                    binding.emptyList.isVisible = locationAdapter.itemCount == 0
+
+                    binding.recyclerview.isVisible = !isListEmpty
+
+                    binding.retryButton.isVisible = loadState.source.refresh is LoadState.Error
+                    val errorState = loadState.source.append as? LoadState.Error
+                        ?: loadState.source.prepend as? LoadState.Error
+                        ?: loadState.append as? LoadState.Error
+                        ?: loadState.prepend as? LoadState.Error
+                    errorState?.let {
+                        Toast.makeText(
+                            requireContext(),
+                            " ${it.error}",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                    }
+                }
+            }
+        }
     }
 
 }
