@@ -11,4 +11,6 @@ object Constants {
     const val LOCATION_TABLE = "location_table"
     const val LOCATION_REMOTE_KEYS_TABLE = "location_remote_keys_table"
     const val STARTING_PAGE_INDEX = 1
+    const val  THIRTY = 30
+    const val  THREE =3
 }

@@ -131,9 +131,6 @@ class LocationDetailsFragment @Inject constructor() :
 
         toolbar.setNavigationOnClickListener {
 
-//            viewModel.back()
-//            findNavController().navigateUp()
-//            findNavController().popBackStack(R.id.locationDetailsFragment, false)
             navigateBack()
         }
     }

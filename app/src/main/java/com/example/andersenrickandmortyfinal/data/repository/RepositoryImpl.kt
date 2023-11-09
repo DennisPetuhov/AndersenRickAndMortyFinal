@@ -24,6 +24,8 @@ import com.example.andersenrickandmortyfinal.data.paging.EpisodeMediator
 import com.example.andersenrickandmortyfinal.data.paging.LocationMediator
 import com.example.andersenrickandmortyfinal.data.paging.details.CharactersMediatorInEpisodesAndLocationsDetails
 import com.example.andersenrickandmortyfinal.data.paging.details.EpisodesInCharacterMediator
+import com.example.andersenrickandmortyfinal.domain.utils.Constants.THIRTY
+import com.example.andersenrickandmortyfinal.domain.utils.Constants.THREE
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -41,8 +43,9 @@ class RepositoryImpl @Inject constructor(
     ): Flow<PagingData<Episode>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 5
-            ),
+                pageSize = THIRTY,
+                prefetchDistance = THREE,
+                enablePlaceholders = false),
             remoteMediator = EpisodesInCharacterMediator(
                 api = episodeApi,
                 database = db,
@@ -55,7 +58,9 @@ class RepositoryImpl @Inject constructor(
     override fun getCachedCharacters(characterIds: List<Int>): Flow<PagingData<Character>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 5
+                pageSize = THIRTY,
+                prefetchDistance = THREE,
+                enablePlaceholders = false
             ),
             remoteMediator = CharactersMediatorInEpisodesAndLocationsDetails(
                 api = characterApi,
@@ -120,8 +125,8 @@ class RepositoryImpl @Inject constructor(
 
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
-                prefetchDistance = 3,
+                pageSize = THIRTY,
+                prefetchDistance = THREE,
                 enablePlaceholders = false
             ),
             remoteMediator = CharactersMediator(
@@ -147,13 +152,13 @@ class RepositoryImpl @Inject constructor(
         type: TypeOfRequest,
         query: String
     ): Flow<PagingData<Episode>> {
-        Log.d("QUERY SEARCH", "New query: $query")
+
         val dbQuery = "%${query.replace(' ', '%')}%"
 
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
-                prefetchDistance = 3,
+                pageSize = THIRTY,
+                prefetchDistance = THREE,
                 enablePlaceholders = false
             ),
             remoteMediator = EpisodeMediator(
@@ -182,8 +187,8 @@ class RepositoryImpl @Inject constructor(
 
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
-                prefetchDistance = 3,
+                pageSize = THIRTY,
+                prefetchDistance = THREE,
                 enablePlaceholders = false
             ),
             remoteMediator = LocationMediator(
