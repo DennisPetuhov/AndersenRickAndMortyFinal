@@ -5,12 +5,12 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
-import com.example.andersenrickandmortyfinal.data.db.characters.Constants
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterPojo
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.character.toEntity
 import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
+import com.example.andersenrickandmortyfinal.domain.utils.Constants
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -74,9 +74,8 @@ class CharactersMediatorInEpisodesAndLocationsDetails(
             db.insertAllCharactersKeys(keys)
 
 
-
-            val listOfCharacter  = listOfPojo.map {
-               it.toEntity()
+            val listOfCharacter = listOfPojo.map {
+                it.toEntity()
             }
             db.insertAllCharacters(listOfCharacter)
 

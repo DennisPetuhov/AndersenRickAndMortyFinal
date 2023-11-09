@@ -10,12 +10,12 @@ import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterPojo
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
-import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.episode.EpisodePojo
 import com.example.andersenrickandmortyfinal.data.model.location.LocationPojo
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
 import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelper
 import com.example.andersenrickandmortyfinal.data.network.api.location.LocationApiHelper
@@ -85,11 +85,11 @@ class RepositoryImpl @Inject constructor(
     }
 
     override fun getSingleLocationByIdFromApi(id: Int): Flow<LocationPojo> {
-        return  locationApi.getLocationById(id)
+        return locationApi.getLocationById(id)
     }
 
     override fun findLocationByIdFromDb(id: Int): Flow<LocationRick> {
-     return db.findLocationById(id)
+        return db.findLocationById(id)
     }
 
     override suspend fun getPagesOfAllCharacters(
@@ -112,7 +112,6 @@ class RepositoryImpl @Inject constructor(
         gender: String,
         status: String
     ): Flow<PagingData<Character>> {
-        Log.d("QUERY SEARCH", "New query: $query + $status + $type + $gender")
 
         val dbQuery = "%${query.replace(' ', '%')}%"
         val dbGender = "%${query.replace(' ', '%')}%"

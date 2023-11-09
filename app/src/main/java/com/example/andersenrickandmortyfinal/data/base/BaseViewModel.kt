@@ -21,9 +21,6 @@ abstract class BaseViewModel : ViewModel() {
     }
 
 
-
-
-
     private val _navigation: MutableStateFlow<NavigationCommand> =
         MutableStateFlow(NavigationCommand.Null)
     val navigation: StateFlow<NavigationCommand> get() = _navigation

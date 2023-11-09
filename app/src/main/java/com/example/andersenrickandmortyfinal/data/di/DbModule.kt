@@ -5,9 +5,9 @@ import androidx.room.Room
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelperImpl
 import com.example.andersenrickandmortyfinal.data.db.MainDatabase
-import com.example.andersenrickandmortyfinal.data.db.characters.Constants.CHARACTER_DATABASE
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import com.example.andersenrickandmortyfinal.domain.utils.Constants.CHARACTER_DATABASE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

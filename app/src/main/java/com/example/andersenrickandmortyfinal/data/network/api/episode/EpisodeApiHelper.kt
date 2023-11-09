@@ -1,9 +1,8 @@
 package com.example.andersenrickandmortyfinal.data.network.api.episode
 
-import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
-import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.episode.EpisodePojo
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import kotlinx.coroutines.flow.Flow
 
 interface EpisodeApiHelper {
@@ -20,6 +19,6 @@ interface EpisodeApiHelper {
         ): Flow<PagedResponse<EpisodePojo>>
 
 
-  fun  getSingleEpisodesById(id:Int):Flow<EpisodePojo>
+    fun getSingleEpisodesById(id: Int): Flow<EpisodePojo>
 
 }

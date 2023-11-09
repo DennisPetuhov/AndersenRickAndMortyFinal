@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.andersenrickandmortyfinal.data.db.characters.Constants.LOCATION_TABLE
+import com.example.andersenrickandmortyfinal.domain.utils.Constants.LOCATION_TABLE
 import com.example.andersenrickandmortyfinal.data.db.converter.StringListConverter
 import kotlinx.parcelize.Parcelize
 

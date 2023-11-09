@@ -25,4 +25,20 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="name">Name</string>
+    <string name="air_date">AIR DATE</string>
+    <string name="episode">Episode</string>
+    <string name="find_character">Find Character</string>
+    <string name="no_filter">No Filter</string>
+    <string name="species">Species</string>
+    <string name="type">Type</string>
+    <string name="status">Status</string>
+    <string name="gender">Gender</string>
+    <string name="find_episode">Find Episode</string>
+    <string name="retry">retry</string>
+    <string name="no_result">NO RESULT</string>
+    <string name="find_location">Find Location</string>
+    <string name="nofilter">NoFilter</string>
+    <string name="no_gender">no gender</string>
+    <string name="no_status">no status</string>
 </resources>

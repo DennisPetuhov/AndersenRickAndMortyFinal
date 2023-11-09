@@ -8,7 +8,6 @@ import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.toEntity
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
-import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelper
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +18,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterDetailsViewModel @Inject constructor() : BaseViewModel() {
 
-    @Inject
-    lateinit var apiEpisodeApiHelper: EpisodeApiHelper
 
     @Inject
     lateinit var repo: Repository
@@ -92,18 +89,15 @@ class CharacterDetailsViewModel @Inject constructor() : BaseViewModel() {
 
         }.toInt()
 
-        val location = LocationRick(
+        return LocationRick(
             id = id, url = item.location.url, name = item.location.name
         )
-        println(location)
-        return location
 
     }
 
     fun getOrigin(bundle: Bundle): LocationRick {
         val item = getArguments(bundle)
         var location = LocationRick()
-        println("this location${item.origin.url}")
         if (item.origin.url.isNotBlank()) {
 
             val id = item.origin.url.filter {

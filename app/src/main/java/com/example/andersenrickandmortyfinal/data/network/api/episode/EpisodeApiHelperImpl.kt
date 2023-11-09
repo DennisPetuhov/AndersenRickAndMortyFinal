@@ -1,6 +1,5 @@
 package com.example.andersenrickandmortyfinal.data.network.api.episode
 
-import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.episode.EpisodePojo
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest

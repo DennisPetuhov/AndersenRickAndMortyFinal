@@ -6,7 +6,6 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
-import com.example.andersenrickandmortyfinal.data.db.characters.Constants.STARTING_PAGE_INDEX
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterPojo
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
@@ -14,6 +13,7 @@ import com.example.andersenrickandmortyfinal.data.model.character.toEntity
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
+import com.example.andersenrickandmortyfinal.domain.utils.Constants.STARTING_PAGE_INDEX
 import retrofit2.HttpException
 import java.io.IOException
 

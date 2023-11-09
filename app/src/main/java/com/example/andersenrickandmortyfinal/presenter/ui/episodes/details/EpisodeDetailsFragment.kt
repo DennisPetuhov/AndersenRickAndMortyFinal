@@ -2,10 +2,12 @@ package com.example.andersenrickandmortyfinal.presenter.ui.episodes.details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.network.connectionmanager.ConnectionManager
@@ -58,14 +60,18 @@ class EpisodeDetailsFragment @Inject constructor() :
         collectEpisode()
         fromAdapterToCharacterDetailsFragment()
         listenToInternet()
+        arrowBack()
 
     }
 
     override fun backPressed() {
+  navigateBack()
+
+    }
+    private fun navigateBack(){
         val direction =
             EpisodeDetailsFragmentDirections.actionEpisodeDetailsFragmentToEpisodeFragment()
         viewModel.navigate(direction)
-
     }
 
     private fun collectCharacters() {
@@ -116,6 +122,15 @@ class EpisodeDetailsFragment @Inject constructor() :
             )
         viewModel.navigate(direction)
     }
+    private fun arrowBack(){
+        val toolbar = requireActivity().findViewById<Toolbar>(androidx.appcompat.R.id.action_bar)
 
+        toolbar.setNavigationOnClickListener {
+
+//            viewModel.back()
+//            findNavController().navigateUp()
+            navigateBack()
+        }
+    }
 
 }

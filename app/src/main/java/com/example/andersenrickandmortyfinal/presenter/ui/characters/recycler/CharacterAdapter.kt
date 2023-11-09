@@ -2,13 +2,11 @@ package com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 import com.example.andersenrickandmortyfinal.data.base.BasePagedDataAdapter
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.databinding.CharacterItemBinding
-import com.example.andersenrickandmortyfinal.presenter.ui.characters.OnClick
 import javax.inject.Inject
 
 class CharacterAdapter @Inject constructor() :
@@ -16,15 +14,13 @@ class CharacterAdapter @Inject constructor() :
         MyUtil()
     ) {
     override fun createViewBinding(parent: ViewGroup): CharacterItemBinding {
-        val binding =
-            CharacterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return binding
+        return CharacterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
     }
 
     override fun bind(binding: CharacterItemBinding, item: Character) {
 
-        item?.let {
+        item.let {
             binding.name.text = it.name
             binding.gender.text = it.gender
             binding.species.text = it.species
@@ -36,7 +32,6 @@ class CharacterAdapter @Inject constructor() :
 
 
     }
-}
 
 
     class MyUtil : DiffUtil.ItemCallback<Character>() {
@@ -54,3 +49,4 @@ class CharacterAdapter @Inject constructor() :
             return oldItem == newItem
         }
     }
+}

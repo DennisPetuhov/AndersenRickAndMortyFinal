@@ -4,38 +4,31 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import com.example.andersenrickandmortyfinal.data.base.BasePagedDataAdapter
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.databinding.CharacterItemBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.characters.OnClick
 import javax.inject.Inject
 
-class EpisodesAdapter @Inject constructor() :
-    PagingDataAdapter<Episode, EpisodeViewHolder>(
-        EpisodeUtil()
-    ) {
-    private var onClick: OnClick? = null
-    fun bind(onClick: OnClick) {
-        this.onClick = onClick
+class EpisodesAdapter@Inject constructor() : BasePagedDataAdapter<Episode, CharacterItemBinding>(
+   EpisodeUtil()
+) {
+    override fun createViewBinding(parent: ViewGroup): CharacterItemBinding {
+        return CharacterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
     }
 
-    override fun onBindViewHolder(holder: EpisodeViewHolder, position: Int) {
-        val item = getItem(position)
-        item?.let {
-            holder.bind(it)
+    override fun bind(binding: CharacterItemBinding, item: Episode) {
 
-        }
-        holder.binding.characterItem.setOnClickListener {
-
-            item?.let { item -> onClick?.onClick(item) }
+        item.let {
+            binding.name.text = it.name
+            binding.gender.text = it.episode
+            binding.species.text = it.airDate
 
 
         }
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeViewHolder {
-        val binding =
-            CharacterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return EpisodeViewHolder(binding)
+
     }
 
 

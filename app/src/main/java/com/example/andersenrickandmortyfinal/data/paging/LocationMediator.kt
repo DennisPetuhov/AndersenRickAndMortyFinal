@@ -5,7 +5,6 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
-import com.example.andersenrickandmortyfinal.data.db.characters.Constants
 import com.example.andersenrickandmortyfinal.data.model.character.CharacterRemoteKeys
 import com.example.andersenrickandmortyfinal.data.model.location.LocationPojo
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRemoteKeys
@@ -14,6 +13,7 @@ import com.example.andersenrickandmortyfinal.data.model.location.toEntity
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.network.api.location.LocationApiHelper
+import com.example.andersenrickandmortyfinal.domain.utils.Constants
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -81,7 +81,7 @@ class LocationMediator
 
             database.insertAllLocationsKeys(keys)
 
-            val newList= listOfPojo.map { it.toEntity() }
+            val newList = listOfPojo.map { it.toEntity() }
             database.insertAllLocations(newList)
 
 

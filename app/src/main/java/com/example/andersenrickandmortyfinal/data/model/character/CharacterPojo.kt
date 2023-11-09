@@ -26,14 +26,14 @@ data class CharacterPojo
 }
 
 fun CharacterPojo.toEntity(): Character {
-    return  Character(
+    return Character(
         id = this.id,
         name = this.name,
         url = this.url,
         gender = this.gender,
         species = this.species,
         episode = this.episode,
-        location =  this.location,
+        location = this.location,
         origin = this.origin,
         created = this.created,
         image = this.image,

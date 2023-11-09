@@ -15,7 +15,6 @@ import androidx.paging.LoadState
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
-import com.example.andersenrickandmortyfinal.data.base.MyAdapter
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.network.connectionmanager.ConnectionManager
@@ -37,7 +36,7 @@ class CharactersFragment @Inject constructor() :
 
     @Inject
     lateinit var characterAdapter: CharacterAdapter
-//    lateinit var characterAdapter: MyAdapter
+
     private lateinit var swipeToRefresh: SwipeRefreshLayout
 
     override val viewModel: CharactersViewModel
@@ -169,7 +168,7 @@ class CharactersFragment @Inject constructor() :
                 parent: AdapterView<*>?,
                 view: View?, position: Int, id: Long
             ) {
-                if (genderList[position] == "no gender") {
+                if (genderList[position] == requireContext().getString(R.string.no_gender)) {
                     viewModel.onSpinnerGenderChanged("")
                 } else {
                     viewModel.onSpinnerGenderChanged(genderList[position])
@@ -200,7 +199,7 @@ class CharactersFragment @Inject constructor() :
                     parent: AdapterView<*>?,
                     view: View?, position: Int, id: Long
                 ) {
-                    if (statusList[position] == "no status") {
+                    if (statusList[position] == requireContext().getString(R.string.no_status)) {
                         viewModel.onSpinnerStatusChanged("")
                     } else {
                         viewModel.onSpinnerStatusChanged(statusList[position])

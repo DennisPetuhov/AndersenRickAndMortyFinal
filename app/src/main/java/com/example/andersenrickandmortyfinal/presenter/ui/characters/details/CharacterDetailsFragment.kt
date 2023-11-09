@@ -2,6 +2,7 @@ package com.example.andersenrickandmortyfinal.presenter.ui.characters.details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -61,24 +62,29 @@ class CharacterDetailsFragment @Inject constructor() :
         fromAdapterToEpisodeDetailsFragment()
         onOriginPress()
         onLocationPress()
+        arrowBack()
     }
 
-    private fun onOriginPress(){
-        binding.originChDetails6.setOnClickListener{
-         val location=   viewModel.getLocation(requireArguments())
-          val direction=
-              CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToLocationDetailsFragment(location)
+    private fun onOriginPress() {
+        binding.originChDetails6.setOnClickListener {
+            val location = viewModel.getLocation(requireArguments())
+            val direction =
+                CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToLocationDetailsFragment(
+                    location
+                )
             viewModel.navigate(direction)
 
 
         }
     }
 
-    private fun onLocationPress(){
-        binding.locationChDetails.setOnClickListener{
-            val location=   viewModel.getOrigin(requireArguments())
-            val direction=
-                CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToLocationDetailsFragment(location)
+    private fun onLocationPress() {
+        binding.locationChDetails.setOnClickListener {
+            val location = viewModel.getOrigin(requireArguments())
+            val direction =
+                CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToLocationDetailsFragment(
+                    location
+                )
             viewModel.navigate(direction)
 
 
@@ -102,6 +108,10 @@ class CharacterDetailsFragment @Inject constructor() :
 
 
     override fun backPressed() {
+        back()
+    }
+
+    private fun back() {
         val direction =
             CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToNavigationHome()
         viewModel.navigate(direction)
@@ -130,8 +140,6 @@ class CharacterDetailsFragment @Inject constructor() :
     }
 
 
-
-
     private fun fromAdapterToEpisodeDetailsFragment() {
         episodeAdapter.bind {
             navigateToEpisodeDetailsFragment(it as Episode)
@@ -143,10 +151,21 @@ class CharacterDetailsFragment @Inject constructor() :
 
     private fun navigateToEpisodeDetailsFragment(item: Episode) {
 
-        val direction
-        =CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToEpisodeDetailsFragment(item)
+        val direction =
+            CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToEpisodeDetailsFragment(
+                item
+            )
 
 
         viewModel.navigate(direction)
+    }
+
+
+    private fun arrowBack() {
+        val toolbar = requireActivity().findViewById<Toolbar>(androidx.appcompat.R.id.action_bar)
+
+        toolbar.setNavigationOnClickListener {
+            back()
+        }
     }
 }

@@ -2,39 +2,31 @@ package com.example.andersenrickandmortyfinal.presenter.ui.locations.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import com.example.andersenrickandmortyfinal.data.base.BasePagedDataAdapter
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import com.example.andersenrickandmortyfinal.databinding.CharacterItemBinding
-import com.example.andersenrickandmortyfinal.presenter.ui.characters.OnClick
 import javax.inject.Inject
 
 class LocationAdapter @Inject constructor() :
-    PagingDataAdapter<LocationRick, LocationViewHolder>(
+    BasePagedDataAdapter<LocationRick, CharacterItemBinding>(
         LocationUtil()
     ) {
-    private var onClick: OnClick? = null
-    fun bind(onClick: OnClick) {
-        this.onClick = onClick
+    override fun createViewBinding(parent: ViewGroup): CharacterItemBinding {
+        return CharacterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
     }
 
-    override fun onBindViewHolder(holder: LocationViewHolder, position: Int) {
-        val item = getItem(position)
-        item?.let {
-            holder.bind(it)
+    override fun bind(binding: CharacterItemBinding, item: LocationRick) {
+
+        item.let {
+            binding.name.text = it.name
+            binding.gender.text = it.dimension
+            binding.species.text = it.type
 
         }
-        holder.binding.characterItem.setOnClickListener {
 
-            item?.let { item -> onClick?.onClick(item) }
 
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder {
-        val binding =
-            CharacterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return LocationViewHolder(binding)
     }
 
 

@@ -46,13 +46,14 @@ interface CharacterDao {
                 " name LIKE :queryString OR species LIKE :queryString Or type LIKE :queryString  "
     )
     fun findALLCharacters(queryString: String): PagingSource<Int, Character>
-@Query(
-    "SELECT * FROM CHARACTER_TABLE WHERE id IN (:charactersIds) "
-)
-   fun findCharactersById(charactersIds:List<Int>):PagingSource<Int,Character>
 
-   @Query("SELECT * FROM CHARACTER_TABLE WHERE id LIKE :id")
-   fun findCharacterById(id:Int): Flow<Character>
+    @Query(
+        "SELECT * FROM CHARACTER_TABLE WHERE id IN (:charactersIds) "
+    )
+    fun findCharactersById(charactersIds: List<Int>): PagingSource<Int, Character>
+
+    @Query("SELECT * FROM CHARACTER_TABLE WHERE id LIKE :id")
+    fun findCharacterById(id: Int): Flow<Character>
 
 
 }

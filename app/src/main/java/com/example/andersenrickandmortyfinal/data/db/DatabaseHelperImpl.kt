@@ -77,12 +77,10 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
         return db.characterDao().findALLCharacters(queryString)
     }
 
-   override fun findCharacterById(id:Int): Flow<Character>{
-       return db.characterDao().findCharacterById(id)
+    override fun findCharacterById(id: Int): Flow<Character> {
+        return db.characterDao().findCharacterById(id)
 
     }
-
-
 
 
     override suspend fun insertAllEpisodes(list: List<Episode>) {
@@ -143,7 +141,7 @@ class DatabaseHelperImpl @Inject constructor(private val db: MainDatabase) :
         db.locationKeyDao().deleteAllKey()
     }
 
-    override fun getAllLocations(query:String): PagingSource<Int, LocationRick> {
+    override fun getAllLocations(query: String): PagingSource<Int, LocationRick> {
         return db.locationDao().getAllLocations(query)
     }
 

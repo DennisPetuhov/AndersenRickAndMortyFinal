@@ -37,6 +37,7 @@ class LocationsFragment @Inject constructor() :
 
 
     override fun setupViews() {
+
         swipeToRefresh = binding.swiperefresh
         initRecycler(binding.recyclerview, locationAdapter)
         swipeToRefresh(swipeToRefresh) {

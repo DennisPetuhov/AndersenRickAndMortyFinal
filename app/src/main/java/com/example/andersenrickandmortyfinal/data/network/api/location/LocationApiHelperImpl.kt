@@ -1,7 +1,6 @@
 package com.example.andersenrickandmortyfinal.data.network.api.location
 
 import com.example.andersenrickandmortyfinal.data.model.location.LocationPojo
-import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import com.example.andersenrickandmortyfinal.data.model.main.PagedResponse
 import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import kotlinx.coroutines.Dispatchers

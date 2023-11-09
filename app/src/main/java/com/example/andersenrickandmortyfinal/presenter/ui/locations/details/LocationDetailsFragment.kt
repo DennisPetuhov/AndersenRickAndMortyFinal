@@ -2,10 +2,13 @@ package com.example.andersenrickandmortyfinal.presenter.ui.locations.details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.databinding.FragmentLocationDetailsBinding
@@ -52,6 +55,7 @@ class LocationDetailsFragment @Inject constructor() :
         collectCharacters()
         collectLocation()
         fromAdapterToCharacterDetailsFragment()
+        arrowBack()
 
     }
 
@@ -91,10 +95,13 @@ class LocationDetailsFragment @Inject constructor() :
 
 
     override fun backPressed() {
+      navigateBack()
+
+    }
+    private fun navigateBack(){
         val direction =
             LocationDetailsFragmentDirections.actionLocationDetailsFragmentToLocatonFragment()
         viewModel.navigate(direction)
-
     }
 
 
@@ -116,6 +123,19 @@ class LocationDetailsFragment @Inject constructor() :
             )
 
         viewModel.navigate(direction)
+    }
+
+
+    private fun arrowBack(){
+        val toolbar = requireActivity().findViewById<Toolbar>(androidx.appcompat.R.id.action_bar)
+
+        toolbar.setNavigationOnClickListener {
+
+//            viewModel.back()
+//            findNavController().navigateUp()
+//            findNavController().popBackStack(R.id.locationDetailsFragment, false)
+            navigateBack()
+        }
     }
 
 

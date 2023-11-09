@@ -182,13 +182,14 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
 
 
     protected fun handleNavigation(navigationCommand: NavigationCommand) {
+        val controller = findNavController()
         when (navigationCommand) {
             is NavigationCommand.Back -> {
-                findNavController().navigateUp()
+                controller.navigateUp()
             }
 
             is NavigationCommand.ToDirections -> {
-                findNavController().navigate(navigationCommand.directions)
+                controller.navigate(navigationCommand.directions)
             }
 
             is NavigationCommand.Null -> null
@@ -220,6 +221,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
                     backPressed()
                 }
             }
+        requireActivity().onNavigateUp()
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
             callback

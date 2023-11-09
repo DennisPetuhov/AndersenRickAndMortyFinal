@@ -11,7 +11,6 @@ import retrofit2.http.Query
 interface CharacterService {
 
 
-
     @GET("character")
     suspend fun getPagesOfAllCharacters(
         @Query("page")
@@ -60,12 +59,15 @@ interface CharacterService {
 
     @GET("character/{list}")
     suspend fun getListOfCharacters(
-        @Path ("list")
-    list:List<Int>):List<CharacterPojo>
+        @Path("list")
+        list: List<Int>
+    ): List<CharacterPojo>
+
     @GET("character/{id}")
-    suspend fun  getCharacterById(
+    suspend fun getCharacterById(
         @Path("id")
-        id:Int):CharacterPojo
+        id: Int
+    ): CharacterPojo
 
 }
 

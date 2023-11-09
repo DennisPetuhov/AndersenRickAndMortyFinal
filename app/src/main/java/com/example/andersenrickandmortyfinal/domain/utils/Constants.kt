@@ -1,4 +1,4 @@
-package com.example.andersenrickandmortyfinal.data.db.characters
+package com.example.andersenrickandmortyfinal.domain.utils
 
 object Constants {
 
