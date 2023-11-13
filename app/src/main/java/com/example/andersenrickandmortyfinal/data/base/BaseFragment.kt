@@ -212,6 +212,8 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
 
     }
 
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val callback: OnBackPressedCallback =
@@ -221,7 +223,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
                     backPressed()
                 }
             }
-        requireActivity().onNavigateUp()
+
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
             callback

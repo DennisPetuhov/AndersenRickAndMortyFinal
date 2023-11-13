@@ -30,8 +30,8 @@ abstract class BaseViewModel : ViewModel() {
         _navigation.value = NavigationCommand.ToDirections(navDirections)
     }
 
-    fun back() {
-        _navigation.value = NavigationCommand.Back
+    fun back(back:Boolean) {
+        _navigation.value = NavigationCommand.Back(back)
 
     }
 }

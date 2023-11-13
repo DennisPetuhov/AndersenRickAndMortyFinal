@@ -27,6 +27,7 @@ class EpisodeDetailsFragment @Inject constructor() :
     override val viewModel: EpisodeDetailsViewModel
         get() = vM
 
+
     @Inject
     lateinit var characterAdapter: CharacterAdapter
 
@@ -65,10 +66,12 @@ class EpisodeDetailsFragment @Inject constructor() :
     }
 
     override fun backPressed() {
-  navigateBack()
 
+//                    viewModel.back(findNavController().navigateUp())
+        navigateBack()
     }
-    private fun navigateBack(){
+
+    private fun navigateBack() {
         val direction =
             EpisodeDetailsFragmentDirections.actionEpisodeDetailsFragmentToEpisodeFragment()
         viewModel.navigate(direction)
@@ -122,14 +125,16 @@ class EpisodeDetailsFragment @Inject constructor() :
             )
         viewModel.navigate(direction)
     }
-    private fun arrowBack(){
+
+    private fun arrowBack() {
         val toolbar = requireActivity().findViewById<Toolbar>(androidx.appcompat.R.id.action_bar)
 
         toolbar.setNavigationOnClickListener {
 
-//            viewModel.back()
-//            findNavController().navigateUp()
-            navigateBack()
+
+            viewModel.back(findNavController().navigateUp())
+
+
         }
     }
 

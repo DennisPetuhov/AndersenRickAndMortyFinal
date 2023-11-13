@@ -4,7 +4,7 @@ import androidx.navigation.NavDirections
 
 sealed class NavigationCommand {
     class ToDirections(val directions: NavDirections) : NavigationCommand()
-    object Back : NavigationCommand()
+    data class Back(val back: Boolean) : NavigationCommand()
     object Null : NavigationCommand()
 
 }
