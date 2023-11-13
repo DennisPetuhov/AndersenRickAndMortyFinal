@@ -15,8 +15,7 @@ class LocationApiHelperImpl @Inject constructor(private val service: LocationSer
         type: TypeOfRequest,
         page: Int,
         query: String,
-
-        ): Flow<PagedResponse<LocationPojo>> {
+    ): Flow<PagedResponse<LocationPojo>> {
         return flow {
             val response = when (type) {
                 is TypeOfRequest.Name -> {
