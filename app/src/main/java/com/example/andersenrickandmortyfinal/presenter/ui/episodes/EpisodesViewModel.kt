@@ -3,9 +3,9 @@ package com.example.andersenrickandmortyfinal.presenter.ui.episodes
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
+import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.main.MyRequest
 import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
-import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

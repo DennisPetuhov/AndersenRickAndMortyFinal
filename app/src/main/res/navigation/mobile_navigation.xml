@@ -12,9 +12,8 @@
         tools:layout="@layout/fragment_characters">
         <action
             android:id="@+id/action_navigation_home_to_characterDetailsFragment"
-            app:destination="@id/characterDetailsFragment"
-                    app:popUpTo="@id/character_fragment"
-                    app:popUpToInclusive="true" />
+            app:destination="@id/characterDetailsFragment"/>
+
 
     </fragment>
 
@@ -25,9 +24,8 @@
         tools:layout="@layout/fragment_locations">
         <action
             android:id="@+id/action_locaton_fragment_to_locationDetailsFragment"
-            app:destination="@id/locationDetailsFragment"
-                    app:popUpTo="@id/locaton_fragment"
-                    app:popUpToInclusive="true" />
+            app:destination="@id/locationDetailsFragment"/>
+
     </fragment>
 
     <fragment
@@ -39,8 +37,7 @@
         <action
             android:id="@+id/action_episode_fragment_to_episodeDetailsFragment"
             app:destination="@id/episodeDetailsFragment"/>
-            app:popUpTo="@id/episode_fragment"
-            app:popUpToInclusive="true"/>
+
 
 
     </fragment>

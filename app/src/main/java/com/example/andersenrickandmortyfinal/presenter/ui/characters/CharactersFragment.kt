@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.andersenrickandmortyfinal.R
@@ -48,7 +49,7 @@ class CharactersFragment @Inject constructor() :
     override fun observeViewModel() {
         networkConnectionManager.startListenNetworkState()
         collectCharacter()
-        observeNavigation(viewModel)
+
         listenToInternet()
 
 
@@ -149,7 +150,7 @@ class CharactersFragment @Inject constructor() :
 
         val direction =
             CharactersFragmentDirections.actionNavigationHomeToCharacterDetailsFragment(item)
-        viewModel.navigate(direction)
+        findNavController().navigate(direction)
     }
 
 

@@ -56,7 +56,7 @@ class EpisodeDetailsFragment @Inject constructor() :
 
 
     override fun observeViewModel() {
-        observeNavigation(viewModel)
+
         collectCharacters()
         collectEpisode()
         fromAdapterToCharacterDetailsFragment()
@@ -66,15 +66,11 @@ class EpisodeDetailsFragment @Inject constructor() :
     }
 
     override fun backPressed() {
-
-//                    viewModel.back(findNavController().navigateUp())
         navigateBack()
     }
 
     private fun navigateBack() {
-        val direction =
-            EpisodeDetailsFragmentDirections.actionEpisodeDetailsFragmentToEpisodeFragment()
-        viewModel.navigate(direction)
+        findNavController().navigateUp()
     }
 
     private fun collectCharacters() {
@@ -123,16 +119,15 @@ class EpisodeDetailsFragment @Inject constructor() :
             EpisodeDetailsFragmentDirections.actionEpisodeDetailsFragmentToCharacterDetailsFragment(
                 item
             )
-        viewModel.navigate(direction)
+        findNavController().navigate(direction)
+
     }
 
     private fun arrowBack() {
         val toolbar = requireActivity().findViewById<Toolbar>(androidx.appcompat.R.id.action_bar)
 
         toolbar.setNavigationOnClickListener {
-
-
-            viewModel.back(findNavController().navigateUp())
+            findNavController().navigateUp()
 
 
         }

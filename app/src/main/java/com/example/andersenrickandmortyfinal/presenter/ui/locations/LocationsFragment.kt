@@ -8,12 +8,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
-import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.databinding.FragmentLocationsBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.locations.recycler.LocationAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,7 +68,7 @@ class LocationsFragment @Inject constructor() :
 
     override fun observeViewModel() {
         observeAdapterChanges()
-        observeNavigation(viewModel)
+
         listenToInternet()
     }
 
@@ -101,7 +102,7 @@ class LocationsFragment @Inject constructor() :
     private fun navigateToDetailsFragment(item: LocationRick) {
         val direction =
             LocationsFragmentDirections.actionLocatonFragmentToLocationDetailsFragment(item)
-        viewModel.navigate(direction)
+        findNavController().navigate(direction)
     }
 
     private fun setupVisibility() {

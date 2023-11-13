@@ -8,12 +8,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.databinding.FragmentLocationDetailsBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.characters.recycler.CharacterAdapter
-import com.example.andersenrickandmortyfinal.presenter.ui.episodes.details.EpisodeDetailsFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,7 +34,7 @@ class LocationDetailsFragment @Inject constructor() :
     override fun setupViews() {
         val swipeToRefresh = binding.swiperefresh
         viewModel.getCharacters(requireArguments())
-        initRecycler(binding.recyclerCharaters,characterAdapter)
+        initRecycler(binding.recyclerCharaters, characterAdapter)
 
         swipeToRefreshInDetailsFragment(swipeToRefresh, { characterAdapter.refresh() },
             { viewModel.getSingleLocationByIdFromInternet(requireArguments()) },
@@ -50,7 +48,7 @@ class LocationDetailsFragment @Inject constructor() :
     }
 
     override fun observeViewModel() {
-        observeNavigation(viewModel)
+
         listenToInternet()
         collectCharacters()
         collectLocation()
@@ -72,7 +70,6 @@ class LocationDetailsFragment @Inject constructor() :
     }
 
 
-
     private fun collectLocation() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -82,7 +79,6 @@ class LocationDetailsFragment @Inject constructor() :
                         name.text = it.name
                         airDate.text = it.dimension
                         episode.text = it.type
-
 
 
                     }
@@ -95,15 +91,14 @@ class LocationDetailsFragment @Inject constructor() :
 
 
     override fun backPressed() {
-      navigateBack()
+        navigateBack()
 
     }
-    private fun navigateBack(){
-        val direction =
-            LocationDetailsFragmentDirections.actionLocationDetailsFragmentToLocatonFragment()
-        viewModel.navigate(direction)
-    }
 
+    private fun navigateBack() {
+
+        findNavController().navigateUp()
+    }
 
 
     private fun fromAdapterToCharacterDetailsFragment() {
@@ -122,16 +117,17 @@ class LocationDetailsFragment @Inject constructor() :
                 item
             )
 
-        viewModel.navigate(direction)
+        findNavController().navigate(direction)
     }
 
 
-    private fun arrowBack(){
+    private fun arrowBack() {
         val toolbar = requireActivity().findViewById<Toolbar>(androidx.appcompat.R.id.action_bar)
 
         toolbar.setNavigationOnClickListener {
 
-            navigateBack()
+
+            findNavController().navigateUp()
         }
     }
 

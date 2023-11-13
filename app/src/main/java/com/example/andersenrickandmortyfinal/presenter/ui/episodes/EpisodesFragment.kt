@@ -8,12 +8,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.andersenrickandmortyfinal.R
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
-import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
+import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
 import com.example.andersenrickandmortyfinal.databinding.FragmentEpisodesBinding
 import com.example.andersenrickandmortyfinal.presenter.ui.episodes.recycler.EpisodesAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,7 +63,7 @@ class EpisodesFragment @Inject constructor() :
             }
         }
 
-        observeNavigation(viewModel)
+
         listenToInternet()
     }
 
@@ -97,8 +98,7 @@ class EpisodesFragment @Inject constructor() :
         val direction =
             EpisodesFragmentDirections.actionEpisodeFragmentToEpisodeDetailsFragment(item)
 
-
-        viewModel.navigate(direction)
+        findNavController().navigate(direction)
     }
 
     private fun setupVisibility() {

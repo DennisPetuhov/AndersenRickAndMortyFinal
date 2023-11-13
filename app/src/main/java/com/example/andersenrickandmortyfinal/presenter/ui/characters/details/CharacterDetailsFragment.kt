@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.andersenrickandmortyfinal.data.base.BaseFragment
@@ -54,7 +55,7 @@ class CharacterDetailsFragment @Inject constructor() :
     }
 
     override fun observeViewModel() {
-        observeNavigation(viewModel)
+
 
         initRecycler()
         viewModel.getArguments(requireArguments())
@@ -72,7 +73,7 @@ class CharacterDetailsFragment @Inject constructor() :
                 CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToLocationDetailsFragment(
                     location
                 )
-            viewModel.navigate(direction)
+            findNavController().navigate(direction)
 
 
         }
@@ -85,7 +86,7 @@ class CharacterDetailsFragment @Inject constructor() :
                 CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToLocationDetailsFragment(
                     location
                 )
-            viewModel.navigate(direction)
+            findNavController().navigate(direction)
 
 
         }
@@ -111,11 +112,6 @@ class CharacterDetailsFragment @Inject constructor() :
         back()
     }
 
-    private fun back() {
-        val direction =
-            CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToNavigationHome()
-        viewModel.navigate(direction)
-    }
 
     private fun setupDetails() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -155,9 +151,7 @@ class CharacterDetailsFragment @Inject constructor() :
             CharacterDetailsFragmentDirections.actionCharacterDetailsFragmentToEpisodeDetailsFragment(
                 item
             )
-
-
-        viewModel.navigate(direction)
+        findNavController().navigate(direction)
     }
 
 
@@ -167,5 +161,11 @@ class CharacterDetailsFragment @Inject constructor() :
         toolbar.setNavigationOnClickListener {
             back()
         }
+    }
+
+
+    private fun back() {
+
+        findNavController().navigateUp()
     }
 }

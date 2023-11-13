@@ -11,11 +11,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,11 +20,9 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewbinding.ViewBinding
 import com.example.andersenrickandmortyfinal.R
-import com.example.andersenrickandmortyfinal.data.navigation.NavigationCommand
 import com.example.andersenrickandmortyfinal.data.network.connectionmanager.ConnectionManager
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -179,39 +174,6 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
     protected abstract fun setupViews()
 
     protected abstract fun observeViewModel()
-
-
-    protected fun handleNavigation(navigationCommand: NavigationCommand) {
-        val controller = findNavController()
-        when (navigationCommand) {
-            is NavigationCommand.Back -> {
-                controller.navigateUp()
-            }
-
-            is NavigationCommand.ToDirections -> {
-                controller.navigate(navigationCommand.directions)
-            }
-
-            is NavigationCommand.Null -> null
-
-        }
-
-
-    }
-
-    protected fun observeNavigation(viewModel: BaseViewModel) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED)
-            {
-                viewModel.navigation.collect {
-                    handleNavigation(it)
-                }
-
-            }
-        }
-
-    }
-
 
 
     override fun onAttach(context: Context) {

@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private var contentHasLoaded = false
 
     private lateinit var navController: NavController
-    lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var appBarConfiguration: AppBarConfiguration
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -44,12 +44,11 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment_activity_main)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        supportActionBar?.setDisplayShowHomeEnabled(true)//
-//        supportActionBar?.setDisplayShowTitleEnabled(false)
 
 
-         appBarConfiguration = AppBarConfiguration(
-//             navController.graph
+
+        appBarConfiguration = AppBarConfiguration(
+
             setOf(
                 R.id.character_fragment, R.id.locaton_fragment, R.id.episode_fragment
             )

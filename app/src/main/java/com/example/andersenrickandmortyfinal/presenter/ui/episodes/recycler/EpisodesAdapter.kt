@@ -2,16 +2,14 @@ package com.example.andersenrickandmortyfinal.presenter.ui.episodes.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.example.andersenrickandmortyfinal.data.base.BasePagedDataAdapter
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.databinding.CharacterItemBinding
-import com.example.andersenrickandmortyfinal.presenter.ui.characters.OnClick
 import javax.inject.Inject
 
-class EpisodesAdapter@Inject constructor() : BasePagedDataAdapter<Episode, CharacterItemBinding>(
-   EpisodeUtil()
+class EpisodesAdapter @Inject constructor() : BasePagedDataAdapter<Episode, CharacterItemBinding>(
+    EpisodeUtil()
 ) {
     override fun createViewBinding(parent: ViewGroup): CharacterItemBinding {
         return CharacterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
