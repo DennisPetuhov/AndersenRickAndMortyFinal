@@ -3,6 +3,7 @@ package com.example.andersenrickandmortyfinal.presenter.ui.characters.details
 import android.os.Bundle
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.andersenrickandmortyfinal.data.base.BaseDetailsViewModel
 import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.character.toEntity
@@ -17,17 +18,17 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class CharacterDetailsViewModel @Inject constructor() : BaseViewModel() {
+class CharacterDetailsViewModel @Inject constructor() : BaseDetailsViewModel<Episode>() {
 
 
     @Inject
     @Named("RepositoryOneQualifier")
     lateinit var repo: Repository
 
-
-    private var _episodesFlow: MutableStateFlow<PagingData<Episode>> =
-        MutableStateFlow(PagingData.empty())
-    val episodesFlow: StateFlow<PagingData<Episode>> get() = _episodesFlow
+//
+//    private var _pagingDataFlow: MutableStateFlow<PagingData<Episode>> =
+//        MutableStateFlow(PagingData.empty())
+//    val pagingDataFlow: StateFlow<PagingData<Episode>> get() = _pagingDataFlow
 
 
     private var _characterFlow: MutableStateFlow<Character> =
@@ -79,7 +80,7 @@ class CharacterDetailsViewModel @Inject constructor() : BaseViewModel() {
         viewModelScope.launch {
             repo.getCachedEpisodes(getNumbersOfEpisodes(bundle)).cachedIn(viewModelScope)
                 .collect {
-                    _episodesFlow.emit(it)
+                    _pagingDataFlow.emit(it)
                 }
         }
     }

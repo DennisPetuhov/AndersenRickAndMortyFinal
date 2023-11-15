@@ -60,7 +60,7 @@ class LocationDetailsFragment @Inject constructor() :
     private fun collectCharacters() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.characterFlow.collect {
+                viewModel.pagingDataFlow.collect {
                     characterAdapter.submitData(it)
                 }
             }

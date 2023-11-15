@@ -3,6 +3,7 @@ package com.example.andersenrickandmortyfinal.presenter.ui.locations.details
 import android.os.Bundle
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.andersenrickandmortyfinal.data.base.BaseDetailsViewModel
 import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.location.LocationPojo
@@ -19,12 +20,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class LocationDetailsViewModel @Inject constructor() : BaseViewModel() {
-
-
-    private var _characterFlow: MutableStateFlow<PagingData<Character>> =
-        MutableStateFlow(PagingData.empty())
-    val characterFlow: StateFlow<PagingData<Character>> get() = _characterFlow
+class LocationDetailsViewModel @Inject constructor() : BaseDetailsViewModel<Character>() {
 
 
     private var _locationFlow: MutableStateFlow<LocationRick> =
@@ -77,7 +73,7 @@ class LocationDetailsViewModel @Inject constructor() : BaseViewModel() {
             getNumbersOfCharacters(bundle).collect { list ->
                 repo.getCachedCharacters(list).cachedIn(viewModelScope)
                     .collect {
-                        _characterFlow.emit(it)
+                        _pagingDataFlow.emit(it)
                     }
             }
 

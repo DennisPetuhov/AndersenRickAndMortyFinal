@@ -101,7 +101,7 @@ class CharacterDetailsFragment @Inject constructor() :
 
         }
         lifecycleScope.launch {
-            viewModel.episodesFlow.collect {
+            viewModel.pagingDataFlow.collect {
                 episodeAdapter.submitData(it)
             }
         }
