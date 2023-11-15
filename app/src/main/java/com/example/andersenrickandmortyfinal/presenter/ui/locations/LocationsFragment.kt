@@ -79,7 +79,7 @@ class LocationsFragment @Inject constructor() :
     private fun observeAdapterChanges() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.locationFlow.collectLatest {
+                viewModel.pagingDataFlow.collectLatest {
                     locationAdapter.submitData(it)
                 }
 

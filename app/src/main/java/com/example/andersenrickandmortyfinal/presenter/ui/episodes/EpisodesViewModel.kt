@@ -1,8 +1,7 @@
 package com.example.andersenrickandmortyfinal.presenter.ui.episodes
 
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
+import com.example.andersenrickandmortyfinal.data.base.BaseMainViewMode
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.main.MyRequest
 import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
@@ -10,31 +9,25 @@ import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
-class EpisodesViewModel @Inject constructor() : BaseViewModel() {
+class EpisodesViewModel @Inject constructor() : BaseMainViewMode<Episode>() {
     init {
         initSearch()
 
     }
 
     @Inject
+    @Named("RepositoryOneQualifier")
     lateinit var repo: Repository
 
 
     private val episodeQueryFlow =
         MutableStateFlow(MyRequest(TypeOfRequest.None, "", "", ""))
-
-    private var _episodeFlow: MutableStateFlow<PagingData<Episode>> =
-        MutableStateFlow(
-            PagingData.empty()
-        )
-    val episodesFlow: StateFlow<PagingData<Episode>>
-        get() = _episodeFlow
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -47,7 +40,7 @@ class EpisodesViewModel @Inject constructor() : BaseViewModel() {
                 ).cachedIn(viewModelScope)
 
             }.collect {
-                _episodeFlow.emit(it)
+                _pagingDataFlow.emit(it)
             }
 
 

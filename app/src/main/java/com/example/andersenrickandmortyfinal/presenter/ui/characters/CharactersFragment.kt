@@ -59,7 +59,7 @@ class CharactersFragment @Inject constructor() :
     private fun collectCharacter() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.charactersFlow.collectLatest {
+                viewModel.pagingDataFlow.collectLatest {
                     characterAdapter.submitData(it)
                 }
 

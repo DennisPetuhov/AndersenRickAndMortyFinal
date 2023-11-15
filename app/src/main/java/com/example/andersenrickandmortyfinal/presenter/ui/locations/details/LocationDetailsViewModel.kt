@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class LocationDetailsViewModel @Inject constructor() : BaseViewModel() {
@@ -31,6 +32,7 @@ class LocationDetailsViewModel @Inject constructor() : BaseViewModel() {
     val locationFlow: StateFlow<LocationRick> get() = _locationFlow
 
     @Inject
+    @Named("RepositoryOneQualifier")
     lateinit var repo: Repository
 
     private fun getArguments(bundle: Bundle): LocationRick {

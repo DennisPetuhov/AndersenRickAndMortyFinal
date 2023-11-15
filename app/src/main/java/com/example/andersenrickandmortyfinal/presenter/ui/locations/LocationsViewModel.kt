@@ -1,8 +1,7 @@
 package com.example.andersenrickandmortyfinal.presenter.ui.locations
 
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
+import com.example.andersenrickandmortyfinal.data.base.BaseMainViewMode
 import com.example.andersenrickandmortyfinal.data.model.location.LocationRick
 import com.example.andersenrickandmortyfinal.data.model.main.MyRequest
 import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
@@ -10,13 +9,13 @@ import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
-class LocationsViewModel @Inject constructor() : BaseViewModel() {
+class LocationsViewModel @Inject constructor() : BaseMainViewMode<LocationRick>() {
     init {
         querySearch()
 
@@ -24,16 +23,10 @@ class LocationsViewModel @Inject constructor() : BaseViewModel() {
 
     private val locationQueryFlow =
         MutableStateFlow(MyRequest(TypeOfRequest.None, ""))
-
-    private var _locationFlow: MutableStateFlow<PagingData<LocationRick>> =
-        MutableStateFlow(
-            PagingData.empty()
-        )
-    val locationFlow: StateFlow<PagingData<LocationRick>>
-        get() = _locationFlow
-
-
+    
     @Inject
+    @Named("RepositoryOneQualifier")
+
     lateinit var repo: Repository
 
 
@@ -47,7 +40,7 @@ class LocationsViewModel @Inject constructor() : BaseViewModel() {
                 ).cachedIn(viewModelScope)
 
             }.collect {
-                _locationFlow.emit(it)
+                _pagingDataFlow.emit(it)
             }
 
 

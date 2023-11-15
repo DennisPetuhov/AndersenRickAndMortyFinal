@@ -1,38 +1,22 @@
 package com.example.andersenrickandmortyfinal.data.di
 
-import com.example.andersenrickandmortyfinal.data.db.DatabaseHelper
-import com.example.andersenrickandmortyfinal.data.network.api.character.CharacterApiHelper
-import com.example.andersenrickandmortyfinal.data.network.api.episode.EpisodeApiHelper
-import com.example.andersenrickandmortyfinal.data.network.api.location.LocationApiHelper
 import com.example.andersenrickandmortyfinal.data.repository.Repository
 import com.example.andersenrickandmortyfinal.data.repository.RepositoryImpl
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import javax.inject.Named
 
 
 @Module
 @InstallIn(SingletonComponent::class)
-class MainModule {
+abstract class MainModule {
 
+    @Binds
+    @Named("RepositoryOneQualifier")
+    abstract fun provideRepository(repositoryImpl: RepositoryImpl): Repository
 
-    @Provides
-    @Singleton
-    fun provideRepository(
-        characterApiHelper: CharacterApiHelper,
-        database: DatabaseHelper,
-        episodeApiHelper: EpisodeApiHelper,
-        locationApiHelper: LocationApiHelper
-    ): Repository {
-        return RepositoryImpl(
-            characterApiHelper,
-            database,
-            episodeApiHelper,
-            locationApiHelper
-        )
-    }
 
 
 }

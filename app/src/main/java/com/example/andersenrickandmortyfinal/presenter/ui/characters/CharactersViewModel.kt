@@ -1,8 +1,7 @@
 package com.example.andersenrickandmortyfinal.presenter.ui.characters
 
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
+import com.example.andersenrickandmortyfinal.data.base.BaseMainViewMode
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.main.MyRequest
 import com.example.andersenrickandmortyfinal.data.model.main.TypeOfRequest
@@ -10,32 +9,25 @@ import com.example.andersenrickandmortyfinal.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
-class CharactersViewModel @Inject constructor() : BaseViewModel() {
+class CharactersViewModel @Inject constructor() : BaseMainViewMode<Character>() {
     init {
         querySearch()
 
     }
 
     @Inject
+    @Named("RepositoryOneQualifier")
     lateinit var repo: Repository
 
 
     private val queryFlow =
         MutableStateFlow(MyRequest(TypeOfRequest.None, "", "", ""))
-
-
-    private var _charactersFlow: MutableStateFlow<PagingData<Character>> =
-        MutableStateFlow(
-            PagingData.empty()
-        )
-    val charactersFlow: StateFlow<PagingData<Character>>
-        get() = _charactersFlow
 
 
     fun onQueryChanged(query: String) {
@@ -83,7 +75,7 @@ class CharactersViewModel @Inject constructor() : BaseViewModel() {
                 ).cachedIn(viewModelScope)
 
             }.collect {
-                _charactersFlow.emit(it)
+                _pagingDataFlow.emit(it)
             }
 
 

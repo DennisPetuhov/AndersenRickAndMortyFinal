@@ -54,7 +54,7 @@ class EpisodesFragment @Inject constructor() :
     override fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.episodesFlow.collectLatest {
+                viewModel.pagingDataFlow.collectLatest {
 
                     episodesAdapter.submitData(it)
                 }
