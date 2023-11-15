@@ -1,10 +1,8 @@
 package com.example.andersenrickandmortyfinal.presenter.ui.episodes.details
 
 import android.os.Bundle
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.andersenrickandmortyfinal.data.base.BaseDetailsViewModel
-import com.example.andersenrickandmortyfinal.data.base.BaseViewModel
 import com.example.andersenrickandmortyfinal.data.model.character.Character
 import com.example.andersenrickandmortyfinal.data.model.episode.Episode
 import com.example.andersenrickandmortyfinal.data.model.episode.toEntity
@@ -33,8 +31,8 @@ class EpisodeDetailsViewModel @Inject constructor() : BaseDetailsViewModel<Chara
             val episode = getArguments(bundle)
 
             repo.getSingleEpisodesByIdFromApi(episode.id).collect {
-                val episode = it.toEntity()
-                _episodeFlow.emit(episode)
+                val episodeEntity = it.toEntity()
+                _episodeFlow.emit(episodeEntity)
             }
 
 

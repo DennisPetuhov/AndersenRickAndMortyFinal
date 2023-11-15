@@ -25,12 +25,6 @@ class CharacterDetailsViewModel @Inject constructor() : BaseDetailsViewModel<Epi
     @Named("RepositoryOneQualifier")
     lateinit var repo: Repository
 
-//
-//    private var _pagingDataFlow: MutableStateFlow<PagingData<Episode>> =
-//        MutableStateFlow(PagingData.empty())
-//    val pagingDataFlow: StateFlow<PagingData<Episode>> get() = _pagingDataFlow
-
-
     private var _characterFlow: MutableStateFlow<Character> =
         MutableStateFlow(Character())
     val characterFlow: StateFlow<Character> get() = _characterFlow
